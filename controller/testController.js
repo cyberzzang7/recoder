@@ -71,5 +71,9 @@ module.exports = {
                 }
              }
         })
+    },
+    test: function(req, res) {
+        console.log(req.query)
+        res.send("서버테스트")
     }
 }
