@@ -14,7 +14,7 @@ module.exports = {
             test.login(req, async(err,rows)=>{ // 비동기 함수로 Model login 함수 실행 
                 if(!rows || !(await bcrypt.compare(req.body.s_password,rows[0].s_password))){ // 결과 값이 없거나 비밀 번호가 일치하지 않을 경우 
                     return res.json("Email or Password is incorrect")
-                }else{
+                }else{ // else -> id 값을 
                     const id = rows[0].s_email
 
                     const token = jwt.sign({id}, process.env.JWT_SECRET, {
@@ -31,7 +31,7 @@ module.exports = {
                     }
                     
                     res.cookie('jwt',token,cookieOptions)
-                    res.json({"login":"success","token:":token})
+                    res.json({"login":"success","token":token})
                 }
             })
         } catch(error) {
@@ -60,6 +60,7 @@ module.exports = {
     },
 
     signup: function(req, res) {
+     
         test.signup(req, async(err,rows)=>{ 
             if(err) {
                 console.log(err)
@@ -67,15 +68,23 @@ module.exports = {
             if(rows.length>0) {
                 res.json("That email is already in use")
             } else{
-                let hashedPassword = await bcrypt.hash(req.body.s_password ,8)
-                req.body.hashedPassword = hashedPassword
-                console.log(hashedPassword)
+                if(req.body.type=="student"){
+                    let hashedPassword = await bcrypt.hash(req.body.s_password,10)
+                    req.body.hashedPassword = hashedPassword
+                    console.log(hashedPassword)
+                } else{
+                    let hashedPassword = await bcrypt.hash(req.body.t_password,10)
+                    req.body.hashedPassword = hashedPassword
+                    console.log(hashedPassword)
+                    
+                }
                 console.log(req.body)
+                console.log(rows+"뭐지?")
                 test.insertInfo(req, function(err,rows){
                       console.log("회원정보넣는중")
                         if(!err){
                             console.log("회원정보삽입완료")
-                            res.json({"mes" : "success", "check": true })
+                            res.json({"mes" : "success", "type": req.body.type })
                         }
                 })
             }
