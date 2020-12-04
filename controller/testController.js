@@ -31,7 +31,7 @@ module.exports = {
                     }
                     
                     res.cookie('jwt',token,cookieOptions)
-                    res.json({"login":"success","token:":token})
+                    res.json({"login":"success","token":token})
                 }
             })
         } catch(error) {
