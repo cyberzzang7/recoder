@@ -2,13 +2,17 @@ const express = require('express');
 var app = express();
 var cors = require('cors');
 const con = require('./config/db');
-var expressSession = require('express-session');
+var session = require('express-session');
 
-app.use(expressSession({
-    secret: 'my key',          
-    resave: true,
-    saveUninitialized:true
-}));
+// app.use(session({
+//     secret: 'my key',          
+//     resave: true,
+//     saveUninitialized:true,
+//     cookie : {
+        
+//         maxAge : 1000* 60 * 1 // 1분후 폭파
+//     }    
+// }));
 
 
 app.use(cors());
