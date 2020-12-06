@@ -7,11 +7,35 @@ module.exports = {
     login: async (req, res)=>{
         console.log(req.body)
         try { // 이메일이나 패스워드가 없을 경우
-            if ( !req.body.s_email || !req.body.s_password){
-                return res.json("Please provide an email and password")
-                
+            if ( typeof req.body.s_email == "undefined"){ // 선생님이라는 뜻 
+                test.tealogin(req, async(err,rows)=>{ // 비동기 함수로 Model login 함수 실행 
+                if(!rows || !(await bcrypt.compare(req.body.t_password,rows[0].t_password))){ // 결과 값이 없거나 비밀 번호가 일치하지 않을 경우 
+                    return res.json("Email or Password is incorrect")
+                }else{ // else -> id 값을 
+                    const id = rows[0].t_email
+
+                    const token = jwt.sign({id}, process.env.JWT_SECRET, {
+                        expiresIn: process.env.JWT_EXPIRES_IN
+                    })
+          
+                    console.log("The token is:" + token)
+
+                    const cookieOptions ={
+                        expries: new Date(
+                            Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
+                        ),
+                        httpOnly:true
+                    }
+
+                    res.cookie('jwt',token,cookieOptions)
+                    res.json({"login":"success","token":token,"type":"teacher"})
+                }
+            })
             }
-            test.login(req, async(err,rows)=>{ // 비동기 함수로 Model login 함수 실행 
+            // !req.body.t_email || ! req.body.t_password
+            if (  typeof req.body.t_email == "undefined" ){// 학생이라는 뜻
+                test.stdlogin(req, async(err,rows)=>{ // 비동기 함수로 Model login 함수 실행 
+               
                 if(!rows || !(await bcrypt.compare(req.body.s_password,rows[0].s_password))){ // 결과 값이 없거나 비밀 번호가 일치하지 않을 경우 
                     return res.json("Email or Password is incorrect")
                 }else{ // else -> id 값을 
@@ -29,11 +53,12 @@ module.exports = {
                         ),
                         httpOnly:true
                     }
-                    
+
                     res.cookie('jwt',token,cookieOptions)
-                    res.json({"login":"success","token":token})
+                    res.json({"login":"success","token":token,"type":"student"})
                 }
             })
+            }
         } catch(error) {
             console.log(error)
         }
@@ -60,7 +85,6 @@ module.exports = {
     },
 
     signup: function(req, res) {
-     
         test.signup(req, async(err,rows)=>{ 
             if(err) {
                 console.log(err)
