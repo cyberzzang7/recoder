@@ -28,14 +28,15 @@ module.exports = {
                     }
 
                     res.cookie('jwt',token,cookieOptions)
-                    res.json({"login":"success","token":token,"type":"teacher"})
+                    return res.json({"login":"success","token":token,"type":"teacher"})
+                
                 }
             })
             }
             // !req.body.t_email || ! req.body.t_password
             if (  typeof req.body.t_email == "undefined" ){// 학생이라는 뜻
                 test.stdlogin(req, async(err,rows)=>{ // 비동기 함수로 Model login 함수 실행 
-               
+            
                 if(!rows || !(await bcrypt.compare(req.body.s_password,rows[0].s_password))){ // 결과 값이 없거나 비밀 번호가 일치하지 않을 경우 
                     return res.json("Email or Password is incorrect")
                 }else{ // else -> id 값을 
@@ -55,7 +56,8 @@ module.exports = {
                     }
 
                     res.cookie('jwt',token,cookieOptions)
-                    res.json({"login":"success","token":token,"type":"student"})
+                    return res.json({"login":"success","token":token,"type":"student"})
+                    
                 }
             })
             }

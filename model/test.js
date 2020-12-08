@@ -3,17 +3,21 @@ const SALT_ROUNDS = 12;
 module.exports = {
     stdlogin : function(con, callback) {
         con.con.query("select * from student where s_email=? ",con.body.s_email, callback)
+        console.log("학생 로그인")
     },
     tealogin : function(con, callback) {
         con.con.query("select * from teacher where t_email=?", con.body.t_email,callback)
+        console.log("선생 로그인")
     },
-    
+
     signup : function(con, callback) {
         console.log(con.body.type)
         if(con.body.type=="student")
             con.con.query("select * from student where s_email=?", con.body.s_email , callback)
+            console.log("학생 회원가입 중복 여부 검사")
         if(con.body.type=="teacher")
             con.con.query("select * from teacher where t_email=?", con.body.t_email , callback)
+             console.log("선생 회원가입 중복 여부 검사")
     },
 
     insertInfo : function(con, callback) {
@@ -24,7 +28,7 @@ module.exports = {
                 s_password : con.body.hashedPassword,
                 s_phone : con.body.s_phone,
             };
-            console.log(stdObj)
+            console.log("학생 데이터 삽입")
             con.con.query("INSERT INTO student SET ?", stdObj ,callback)
         }
         
@@ -35,7 +39,7 @@ module.exports = {
                 t_password : con.body.hashedPassword,
                 t_phone : con.body.t_phone,
             };
-            console.log(teaObj)
+            console.log("선생 데이터 삽입")
             con.con.query("INSERT INTO teacher SET ?", teaObj ,callback)
         }
         
