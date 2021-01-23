@@ -61,17 +61,33 @@ module.exports = {
                 a=a-100000;
             }
             console.log(a)
-               var classObj = {
+            var classObj = {
                 class_code : a,
                 t_email : con.body.t_email,
                 class_name : con.body.class_name
-        };
+            }
         con.con.query("INSERT INTO class SET ?",classObj)
         con.con.query("select * from class where t_email=?",con.body.t_email,callback)
     
     },
     classInfo: function(con,callback){
-        con.con.query("select * from class where t_email=?",con.body.t_email,callback)
+        if ( typeof con.body.s_email == "undefined"){ 
+            con.con.query("select * from class where t_email=?",con.body.t_email,callback)
+        }
+        if (  typeof con.body.t_email == "undefined" ){
+            con.con.query(`select distinct class.class_num,class.class_name,student.s_name,class.class_code,user_relation_class.recognize from class, user_relation_class, student where class.class_code=user_relation_class.class_code 
+and student.s_email=?`,con.body.s_email,callback)
+        }
+    },
+    classJoin: function(con,callback){
+        var classJoin = {
+                s_email : con.body.s_email,
+                class_code : con.body.class_code,
+                recognize : 0
+        }
+        con.con.query("INSERT INTO user_relation_class SET ?",classJoin)
+        con.con.query(`select distinct class.class_num,class.class_name,student.s_name,class.class_code,user_relation_class.recognize from class, user_relation_class, student where class.class_code=user_relation_class.class_code 
+and student.s_email=?`,con.body.s_email,callback)
     }
 
 }

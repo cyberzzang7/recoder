@@ -141,6 +141,17 @@ module.exports = {
         })
     },
 
+    classjoin:function(req,res){
+        test.classJoin(req, async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            console.log(rows)
+
+            return res.json(rows)
+        })
+    },
+
     test: function(req, res) {
         console.log(req.body)
         res.send("서버테스트")
