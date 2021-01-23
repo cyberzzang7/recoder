@@ -17,7 +17,7 @@ module.exports = {
             console.log("학생 회원가입 중복 여부 검사")
         if(con.body.type=="teacher")
             con.con.query("select * from teacher where t_email=?", con.body.t_email , callback)
-             console.log("선생 회원가입 중복 여부 검사")
+            console.log("선생 회원가입 중복 여부 검사")
     },
 
     insertInfo : function(con, callback) {
@@ -43,5 +43,35 @@ module.exports = {
             con.con.query("INSERT INTO teacher SET ?", teaObj ,callback)
         }
         
+    },
+    // classcreate : function(con,callback){
+    //      var classObj = {
+    //             class_code : a,
+    //             t_email : con.body.t_email,
+    //             class_name : con.body.class_name
+    //     };
+    //     con.con.query("INSERT INTO class SET ?",classObj)
+    //     con.con.query("select class_code from class where t_email=?",con.body.t_email,callback)
+    
+      
+    // },
+    classcodevalidate: function(con,callback){
+            var a = Math.floor(Math.random() * 1000000) + 100000;
+            if(a>1000000){
+                a=a-100000;
+            }
+            console.log(a)
+               var classObj = {
+                class_code : a,
+                t_email : con.body.t_email,
+                class_name : con.body.class_name
+        };
+        con.con.query("INSERT INTO class SET ?",classObj)
+        con.con.query("select * from class where t_email=?",con.body.t_email,callback)
+    
+    },
+    classInfo: function(con,callback){
+        con.con.query("select * from class where t_email=?",con.body.t_email,callback)
     }
+
 }

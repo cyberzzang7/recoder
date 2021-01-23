@@ -6,10 +6,11 @@ const bcrypt = require('bcrypt')
 module.exports = {
     login: async (req, res)=>{
         console.log(req.body)
+    
         try { // 이메일이나 패스워드가 없을 경우
             if ( typeof req.body.s_email == "undefined"){ // 선생님이라는 뜻 
                 test.tealogin(req, async(err,rows)=>{ // 비동기 함수로 Model login 함수 실행 
-                if(!rows || !(await bcrypt.compare(req.body.t_password,rows[0].t_password))){ // 결과 값이 없거나 비밀 번호가 일치하지 않을 경우 
+                if(!rows[0] || !(await bcrypt.compare(req.body.t_password,rows[0].t_password))){ // 결과 값이 없거나 비밀 번호가 일치하지 않을 경우 
                     return res.json("Email or Password is incorrect")
                 }else{ // else -> id 값을 
                     const id = rows[0].t_email
@@ -26,10 +27,10 @@ module.exports = {
                         ),
                         httpOnly:true
                     }
-
+            
                     res.cookie('jwt',token,cookieOptions)
-                    return res.json({"login":"success","token":token,"type":"teacher"})
-                
+                    return res.json({"login":"success","token":token,"type":"teacher","t_name":rows[0].t_name})
+
                 }
             })
             }
@@ -37,7 +38,7 @@ module.exports = {
             if (  typeof req.body.t_email == "undefined" ){// 학생이라는 뜻
                 test.stdlogin(req, async(err,rows)=>{ // 비동기 함수로 Model login 함수 실행 
             
-                if(!rows || !(await bcrypt.compare(req.body.s_password,rows[0].s_password))){ // 결과 값이 없거나 비밀 번호가 일치하지 않을 경우 
+                if(!rows[0] || !(await bcrypt.compare(req.body.s_password,rows[0].s_password))){ // 결과 값이 없거나 비밀 번호가 일치하지 않을 경우 
                     return res.json("Email or Password is incorrect")
                 }else{ // else -> id 값을 
                     const id = rows[0].s_email
@@ -56,7 +57,7 @@ module.exports = {
                     }
 
                     res.cookie('jwt',token,cookieOptions)
-                    return res.json({"login":"success","token":token,"type":"student"})
+                    return res.json({"login":"success","token":token,"type":"student","s_name":rows[0].s_name})
                     
                 }
             })
@@ -116,8 +117,32 @@ module.exports = {
             }
         })
     },
+
+    classcreate: function(req,res){
+      
+        test.classcodevalidate(req, async(err,rows)=>{
+                console.log(rows)
+
+                return res.json(rows)
+        })
+    
+        // test.classcreate(req, async(err,rows)=>{
+        // })
+        
+    },
+    classinfo: function(req,res){
+        test.classInfo(req,async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            console.log(rows)
+            
+            return res.json(rows)
+        })
+    },
+
     test: function(req, res) {
-        console.log(req.query)
+        console.log(req.body)
         res.send("서버테스트")
     }
 }
