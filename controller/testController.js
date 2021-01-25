@@ -152,6 +152,26 @@ module.exports = {
         })
     },
 
+    classdelete:function(req,res){
+        test.classDelete(req, async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            console.log({"mes":"success"})
+
+            return res.json({"mes":"success"})
+        })
+    },
+    classrecognize:function(req,res){
+        test.classRecognize(req, async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            console.log({"mes":"success"})
+
+            return res.json({"mes":"success"})
+        })
+    },
     test: function(req, res) {
         console.log(req.body)
         res.send("서버테스트")

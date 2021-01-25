@@ -88,6 +88,13 @@ and student.s_email=?`,con.body.s_email,callback)
         con.con.query("INSERT INTO user_relation_class SET ?",classJoin)
         con.con.query(`select distinct class.class_num,class.class_name,student.s_name,class.class_code,user_relation_class.recognize from class, user_relation_class, student where class.class_code=user_relation_class.class_code 
 and student.s_email=?`,con.body.s_email,callback)
-    }
+    },
+    classDelete: function(con,callback){
+        con.con.query("delete from class where class_code=?",con.body.class_code,callback)
+    },
+
+    classRecognize:function(con,callback){
+        con.con.query("UPDATE user_relation_class SET recognize = true WHERE s_email=? and class_code=?",[con.body.s_email,con.body.class_code],callback);
+    },
 
 }
