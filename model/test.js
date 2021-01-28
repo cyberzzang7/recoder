@@ -44,17 +44,17 @@ module.exports = {
         }
         
     },
-    // classcreate : function(con,callback){
-    //      var classObj = {
-    //             class_code : a,
-    //             t_email : con.body.t_email,
-    //             class_name : con.body.class_name
-    //     };
-    //     con.con.query("INSERT INTO class SET ?",classObj)
-    //     con.con.query("select class_code from class where t_email=?",con.body.t_email,callback)
+    classcreate : function(con,callback){
+         var classObj = {
+                class_code : a,
+                t_email : con.body.t_email,
+                class_name : con.body.class_name
+        };
+        con.con.query("INSERT INTO class SET ?",classObj)
+        con.con.query("select class_code from class where t_email=?",con.body.t_email,callback)
     
       
-    // },
+    },
     classcodevalidate: function(con,callback){
             var a = Math.floor(Math.random() * 1000000) + 100000;
             if(a>1000000){
@@ -90,7 +90,17 @@ and student.s_email=?`,con.body.s_email,callback)
 and student.s_email=?`,con.body.s_email,callback)
     },
     classDelete: function(con,callback){
-        con.con.query("delete from class where class_code=?",con.body.class_code,callback)
+        let count = 0
+        if(con.body.length==1){
+            con.con.query("delete from user_relation_class where class_code=?",con.body[0].class_code)
+            con.con.query("delete from class where class_code=?",con.body[0].class_code)
+        } else {
+            for(count =0; con.body.length>count; count++){
+                con.con.query("delete from user_relation_class where class_code=?",con.body[count].class_code)
+                con.con.query("delete from class where class_code=?",con.body[count].class_code)
+            }
+        }
+         con.con.query("select * from class where t_email=?",con.body[0].t_email,callback)
     },
 
     classRecognize:function(con,callback){
