@@ -148,7 +148,7 @@ module.exports = {
             }
             console.log(rows)
 
-            return res.json(rows)
+            return res.json({"mes":"success"})
         })
     },
 

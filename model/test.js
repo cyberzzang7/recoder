@@ -78,7 +78,7 @@ module.exports = {
             con.con.query("select * from class where t_email=?",con.body.t_email,callback)
         }
         if ( typeof con.body.t_email == "undefined" ){
-            con.con.query("SELECT c.class_num,c.class_name,c.class_name,c.class_code FROM class c LEFT OUTER JOIN user_relation_class u ON c.class_code=u.class_code WHERE u.recognize=1 and u.s_email=?",con.body.s_email,callback)
+            con.con.query("SELECT c.class_num,c.class_name,c.class_name,c.class_code,u.recognize FROM class c LEFT OUTER JOIN user_relation_class u ON c.class_code=u.class_code WHERE u.s_email=?",con.body.s_email,callback)
         }
     },
     classJoin: function(con,callback){
