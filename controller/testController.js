@@ -130,8 +130,8 @@ module.exports = {
         // })
         
     },
-    classinfo: function(req,res){
-        test.classInfo(req,async(err,rows)=>{
+    classlist: function(req,res){
+        test.classList(req,async(err,rows)=>{
             if(err){
                 console.log(err)
             }
@@ -160,6 +160,16 @@ module.exports = {
             console.log({"mes":"success"})
 
             return res.json({"mes":"success"})
+        })
+    },
+    usermanagement:function(req,res) {
+        test.userManagement(req,async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            console.log({"mes":"success"})
+
+            return res.json(rows)
         })
     },
     classrecognize:function(req,res){

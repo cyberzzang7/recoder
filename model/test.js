@@ -71,12 +71,14 @@ module.exports = {
     
     },
     classInfo: function(con,callback){
+        
+    },
+    classList: function(con,callback){
         if ( typeof con.body.s_email == "undefined"){ 
             con.con.query("select * from class where t_email=?",con.body.t_email,callback)
         }
-        if (  typeof con.body.t_email == "undefined" ){
-            con.con.query(`select distinct class.class_num,class.class_name,student.s_name,class.class_code,user_relation_class.recognize from class, user_relation_class, student where class.class_code=user_relation_class.class_code 
-and student.s_email=?`,con.body.s_email,callback)
+        if ( typeof con.body.t_email == "undefined" ){
+            con.con.query("SELECT c.class_num,c.class_name,c.class_name,c.class_code FROM class c LEFT OUTER JOIN user_relation_class u ON c.class_code=u.class_code WHERE u.recognize=1 and u.s_email=?",con.body.s_email,callback)
         }
     },
     classJoin: function(con,callback){
@@ -85,10 +87,11 @@ and student.s_email=?`,con.body.s_email,callback)
                 class_code : con.body.class_code,
                 recognize : 0
         }
-        con.con.query("INSERT INTO user_relation_class SET ?",classJoin)
-        con.con.query(`select distinct class.class_num,class.class_name,student.s_name,class.class_code,user_relation_class.recognize from class, user_relation_class, student where class.class_code=user_relation_class.class_code 
-and student.s_email=?`,con.body.s_email,callback)
-    },
+        con.con.query("INSERT INTO user_relation_class SET ?",classJoin,callback)
+        // con.con.query(`select distinct class.class_num,class.class_name,student.s_name,class.class_code,user_relation_class.recognize 
+        // from class, user_relation_class, student 
+        // where class.class_code=user_relation_class.class_code and user_relation_class.s_email=?`,con.body.s_email,callback)
+    }, // 쿼리 수정 필요 중복값 많이 나옴. 
     classDelete: function(con,callback){
         let count = 0
         if(con.body.length==1){
@@ -102,9 +105,13 @@ and student.s_email=?`,con.body.s_email,callback)
         }
          con.con.query("select * from class where t_email=?",con.body[0].t_email,callback)
     },
-
-    classRecognize:function(con,callback){
-        con.con.query("UPDATE user_relation_class SET recognize = true WHERE s_email=? and class_code=?",[con.body.s_email,con.body.class_code],callback);
+    userManagement:function(con,callback){
+        con.con.query("SELECT s.s_email,s.s_name,u.recognize FROM student s LEFT OUTER JOIN user_relation_class u ON s.s_email=u.s_email WHERE class_code=?",con.body.class_code,callback)
     },
-
+    classRecognize:function(con,callback){
+        for(count =0; con.body.length>count; count++){
+            con.con.query("UPDATE user_relation_class SET recognize = true WHERE s_email=? and class_code=?",[con.body[count].s_email,con.body[count].class_code]);
+        }
+        return callback
+    },
 }
