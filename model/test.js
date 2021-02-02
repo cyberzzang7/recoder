@@ -71,7 +71,7 @@ module.exports = {
     
     },
     classInfo: function(con,callback){
-        
+        con.con.query("SELECT t.test_name, (select count(*) from test_relation_question where test_id=t.test_id) as questioncount ,t.test_start,t.test_end,t.test_status FROM test t WHERE t.class_code=?",con.body.class_code,callback)
     },
     classList: function(con,callback){
         if ( typeof con.body.s_email == "undefined"){ 

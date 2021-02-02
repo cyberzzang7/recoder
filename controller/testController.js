@@ -140,7 +140,16 @@ module.exports = {
             return res.json(rows)
         })
     },
+    classinfo:function(req,res){
+        test.classInfo(req, async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            console.log(rows)
 
+            return res.json(rows)
+        })
+    },
     classjoin:function(req,res){
         test.classJoin(req, async(err,rows)=>{
             if(err){
@@ -174,6 +183,16 @@ module.exports = {
     },
     classrecognize:function(req,res){
         test.classRecognize(req, async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            console.log({"mes":"success"})
+
+            return res.json({"mes":"success"})
+        })
+    },
+    examcreate:function(req,res){
+        test.examCreate(req, async(err,rows)=>{
             if(err){
                 console.log(err)
             }

@@ -230,3 +230,14 @@ REFERENCES `test` (
 	`test_id`
 );
 
+
+
+INSERT INTO `test`(`class_code`, `test_name`, `test_start`, `test_end`, `test_wait`, `test_caution`, `test_retake`, `test_shuffle`, `test_escape`, `test_lang`, `test_status`) VALUES ("805760","JavaScript","2021-02-01 17:00","2021-02-01 18:00","300","123456","1","1","1","Java","1")
+
+
+
+ALTER TABLE question MODIFY question_id INT NOT NULL AUTO_INCREMENT;
+
+
+
+SELECT t.test_name, (select count(*) from test_relation_question where test_id=2) as questioncount ,t.test_start,t.test_end,t.test_status FROM test t WHERE t.class_code="876414"
