@@ -71,7 +71,12 @@ module.exports = {
     
     },
     classInfo: function(con,callback){
-        con.con.query("SELECT t.test_name, (select count(*) from test_relation_question where test_id=t.test_id) as questioncount ,t.test_start,t.test_end,t.test_status FROM test t WHERE t.class_code=?",con.body.class_code,callback)
+        if ( typeof con.body.s_email == "undefined"){ 
+            con.con.query("SELECT t.test_name, (select count(*) from test_relation_question where test_id=t.test_id) as questioncount ,date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,t.t_test_status FROM test t WHERE t.class_code=?",con.body.class_code,callback)
+        }
+        if ( typeof con.body.t_email == "undefined"){
+
+        }
     },
     classList: function(con,callback){
         if ( typeof con.body.s_email == "undefined"){ 
