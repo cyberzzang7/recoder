@@ -109,9 +109,12 @@ module.exports = {
         con.con.query("SELECT s.s_email,s.s_name,u.recognize FROM student s LEFT OUTER JOIN user_relation_class u ON s.s_email=u.s_email WHERE class_code=?",con.body.class_code,callback)
     },
     classRecognize:function(con,callback){
-        for(count =0; con.body.length>count; count++){
+        console.log(con.body.length)
+        console.log(con.body[0].s_email)
+        console.log(con.body[0].class_code)
+        for(let count=0; con.body.length>count; count++){
             con.con.query("UPDATE user_relation_class SET recognize = true WHERE s_email=? and class_code=?",[con.body[count].s_email,con.body[count].class_code]);
         }
-        return callback
+        con.con.query("select * from user_relation_class",callback)
     },
 }
