@@ -201,6 +201,17 @@ module.exports = {
             return res.json({"mes":"success"})
         })
     },
+    examdelete:function(req,res){
+        test.examDelete(req, async(err,rows)=>{
+            if(err){
+                console.log(err)
+               
+            }
+            console.log(rows)
+
+            return res.json({"mes":"success"})
+        })
+    },
     test: function(req, res) {
         console.log(req.body)
         res.send("서버테스트")

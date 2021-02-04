@@ -15,5 +15,6 @@ router.post('/classdelete',testController.classdelete);
 router.post('/usermanagement', testController.usermanagement);
 router.post('/classrecognize',testController.classrecognize);
 router.post('/examcreate',testController.examcreate);
+router.post('/examdelete',testController.examdelete);
 module.exports= router;
 

@@ -72,11 +72,15 @@ module.exports = {
     },
     classInfo: function(con,callback){
         if ( typeof con.body.s_email == "undefined"){ 
-            con.con.query("SELECT t.test_name, (select count(*) from test_relation_question where test_id=t.test_id) as questioncount ,date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,t.t_test_status FROM test t WHERE t.class_code=?",con.body.class_code,callback)
+            con.con.query("SELECT t.test_id,t.test_name, (select count(*) from test_relation_question where test_id=t.test_id) as questioncount ,date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,t.t_test_status FROM test t WHERE t.class_code=?",con.body.class_code,callback)
         }
         if ( typeof con.body.t_email == "undefined"){
 
         }
+    },
+    examDelete: function(con,callback){
+        con.con.query("delete from test_relation_question where test_id=?",con.body.test_id)
+        con.con.query("delete from test where test_id=?",con.body.test_id,callback)
     },
     classList: function(con,callback){
         if ( typeof con.body.s_email == "undefined"){ 
@@ -122,4 +126,32 @@ module.exports = {
         }
         con.con.query("select * from user_relation_class",callback)
     },
+    examCreate:function(con,callback){
+        var examInfo = {
+                class_code : con.body[0].class_code,
+                test_name : con.body[0].test_name,
+                test_start : con.body[0].test_start,
+                test_end : con.body[0].test_end,
+                test_wait : con.body[0].test_wait,
+                test_caution : con.body[0].test_caution,
+                test_retake : con.body[0].test_retake,
+                test_shuffle : con.body[0].test_shuffle,
+                test_escape : con.body[0].test_escape,
+                test_lang : con.body[0].test_lang,
+                s_test_status : 1,
+                t_test_status : 1,
+        }
+        con.con.query("INSERT INTO test SET ?",examInfo)
+
+        for(let count=1; con.body.length>count; count++){
+            var questionInfo = {
+                question_name : con.body[count].question_name,
+                question_score : con.body[count].question_score,
+                question_text : con.body[count].question_text
+            }
+            con.con.query("INSERT INTO question SET ?",questionInfo)
+        }
+    con.con.query("SELECT t.test_id,t.test_name, (select count(*) from test_relation_question where test_id=t.test_id) as questioncount ,date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,t.t_test_status FROM test t WHERE t.class_code=?",con.body[0].class_code ,callback)
+        
+    }
 }
