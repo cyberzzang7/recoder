@@ -15,6 +15,12 @@ router.post('/classdelete',testController.classdelete);
 router.post('/usermanagement', testController.usermanagement);
 router.post('/classrecognize',testController.classrecognize);
 router.post('/examcreate',testController.examcreate);
+router.post('/examinfo', testController.examinfo);
 router.post('/examdelete',testController.examdelete);
+router.post('/examcomplete',testController.examcomplete);
+router.post('/questioninfo',testController.questioninfo);
+router.post('/questionalter',testController.questionalter);
+router.post('/questiondelete',testController.questiondelete);
+router.post('/eyetracking',testController.eyetracking)
 module.exports= router;
 

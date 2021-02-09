@@ -142,16 +142,58 @@ module.exports = {
                 t_test_status : 1,
         }
         con.con.query("INSERT INTO test SET ?",examInfo)
-
+        
         for(let count=1; con.body.length>count; count++){
-            var questionInfo = {
-                question_name : con.body[count].question_name,
-                question_score : con.body[count].question_score,
-                question_text : con.body[count].question_text
-            }
-            con.con.query("INSERT INTO question SET ?",questionInfo)
+            con.con.query("select max(test_id) as test_id from test",function(err,rows){
+                 var questionInfo = {
+                    question_name : con.body[count].question_name,
+                    question_score : con.body[count].question_score,
+                    question_text : con.body[count].question_text
+                }
+                con.con.query("INSERT INTO question SET ?",questionInfo)
+                con.con.query("select max(question_id) as question_id from question",function(err,rowss){
+                    var test_relation_question= {
+                        test_id : rows[0].test_id,
+                        question_id : rowss[0].question_id
+                    }
+                    console.log(rowss[0].question_id)
+                    con.con.query("INSERT INTO test_relation_question set ?",test_relation_question)
+                })
+            })
         }
     con.con.query("SELECT t.test_id,t.test_name, (select count(*) from test_relation_question where test_id=t.test_id) as questioncount ,date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,t.t_test_status FROM test t WHERE t.class_code=?",con.body[0].class_code ,callback)
         
-    }
+    },
+    examInfo:function(con,callback){
+        con.con.query("select distinct t.test_id,t.class_code,t.test_name,date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,t.test_wait,t.test_caution,t.test_retake,t.test_shuffle,t.test_escape,t.test_lang from test t inner join test_relation_question r ON t.test_id=r.test_id where t.test_id=?",con.body.test_id,callback);
+    },
+    examInfo2:function(con,callback){
+        con.con.query("select q.question_name,q.question_score from question q inner join test_relation_question r on q.question_id=r.question_id",callback)
+    },
+
+    examComplete:function(con,callback){
+        console.log(con.classInfo[1].test_id)
+        con.con.query("select s.s_email,s_name,state.test_validation,state.s_retake,state.mic_caution,state.eye_caution FROM student s LEFT OUTER JOIN state state ON s.s_email=state.s_email where state.test_id=?",con.classInfo[1].test_id,callback)
+    },
+    questionInfo:function(con,callback){
+        con.con.query("select * from question where question_id=?",con.body.question_id,callback)
+    },
+    questionAlter:function(con,callback){
+        var questionInfo = {
+                question_id : con.body.question_id,
+                question_name : con.body.question_name,
+                question_score : con.body.question_score,
+                question_text : con.body.question_text
+        }
+        con.con.query("update question set ? where question_id=?",[questionInfo,con.body.question_id])
+        con.con.query("select * from question where question_id=?",con.body.question_id,callback)
+    },
+    questionDelete:function(con,callback){
+        con.con.query("delete from test_relation_question where question_id=?",con.body.question_id)
+        con.con.query("delete from question where question_id=?",con.body.question_id,callback)
+    },
+    eyeTracking:function(con,callback){
+        con.con.query("update state SET eye_caution = eye_caution + 1 WHERE s_email=? and test_id=? ",[con.body.s_email,con.body.test_id])
+        con.con.query("select s_email,eye_caution from state WHERE s_email=? and test_id=? ",[con.body.s_email,con.body.test_id],callback)
+    },
 }

@@ -231,8 +231,30 @@ REFERENCES `test` (
 );
 
 
-INSERT INTO `test`(`class_code`, `test_name`, `test_start`, `test_end`, `test_wait`, `test_caution`, `test_retake`, `test_shuffle`, `test_escape`, `test_lang`, `test_status`) VALUES ("805760","JavaScript","2021-02-01 17:00","2021-02-01 18:00","300","123456","1","1","1","Java","1")
+INSERT INTO `test`(`class_code`, `test_name`, `test_start`, `test_end`, `test_wait`, `test_caution`, `test_retake`, `test_shuffle`, `test_escape`, `test_lang`, `s_test_status`,`t_test_status`) VALUES ("876414","JavaScript","2021-02-01 17:00","2021-02-01 18:00","300","123456","1","1","1","Java","1","0")
 
+-- 시험지 삽입 쿼리문 --
+
+
+[
+    {
+        "class_code":"876414",
+        "test_name":"Python",
+        "test_start":"2021-02-03 15:00:00",
+        "test_end":"2021-02-03 16:00:00",
+        "test_wait":"00:03:00",
+        "test_caution":"이거 진짜 중요하고 위험한 시험이니 주의바람.",
+        "test_retake":"1",
+        "test_shuffle":"1",
+        "test_escape":"1",
+        "test_lang":"Python"
+    },
+    {
+        "question_name":"1번문제. 잘풀어라잉",
+        "question_score":"100",
+        "question_text":"엄마가좋아? 아빠가좋아?"
+    }
+]
 
 
 ALTER TABLE question MODIFY question_id INT NOT NULL AUTO_INCREMENT;
@@ -240,3 +262,6 @@ ALTER TABLE question MODIFY question_id INT NOT NULL AUTO_INCREMENT;
 
 
 SELECT t.test_name, (select count(*) from test_relation_question where test_id=t.test_id) as questioncount ,t.test_start,t.test_end,t.test_status FROM test t WHERE t.class_code="876414"
+
+INSERT INTO `state` (`test_id`, `s_email`, `s_retake`, `mic_caution`, `eye_caution`, `test_validation`, `test_start_time`, `test_end_time`, `total_score`) VALUES ('3', 'cyberzzang3@g.yju.ac.kr', '1', '1', '1', '1', '2014-00-00', '0000-00-00', '80')
+-- 통계 삽입 --

@@ -201,6 +201,28 @@ module.exports = {
             return res.json({"mes":"success"})
         })
     },
+    examinfo:function(req,res){
+        test.examInfo(req,async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+                test.examInfo2(req,async(err,rowss)=>{
+                    if(err){
+                        console.log(err)
+                    }   
+                    if(rows.length>0){
+                        for(var count = 0, number = 1; rowss.length>count; count++,number++){
+                    
+                            rows[number] = rowss[count]
+                    
+                        // 내일 진행 + 구슬이 요청 사항 2개 추가 문제 개수 시험지 개수 학생 명단 이런거 ? 
+                        }
+                        return res.json(rows)
+                    }
+                    return res.json("생성된 시험지가 없습니다.")   
+                })
+        })
+    },
     examdelete:function(req,res){
         test.examDelete(req, async(err,rows)=>{
             if(err){
@@ -210,6 +232,60 @@ module.exports = {
             console.log(rows)
 
             return res.json({"mes":"success"})
+        })
+    },
+    examcomplete:function(req,res){
+        test.classInfo(req,async(err,rows)=>{
+            req.classInfo = rows
+            console.log(req)
+            test.examComplete(req,async(err,rowss)=>{
+                let complete = rowss
+                return res.json(complete)
+            })
+        })
+    },
+    questioninfo:function(req,res){
+        test.questionInfo(req,async(err,rows)=>{
+             if(err){
+                console.log(err)
+               
+            }
+            console.log(rows)
+
+            return res.json(rows)
+        })
+    },
+    questionalter:function(req,res){
+        test.questionAlter(req,async(err,rows)=>{
+               if(err){
+                console.log(err)
+               
+            }
+            console.log(rows)
+
+            return res.json(rows)
+        })
+    },
+    questiondelete:function(req,res){
+        test.questionDelete(req,async(err,rows)=>{
+            if(err){
+                console.log(err)
+               
+            }
+            console.log(rows)
+
+            return res.json({"mes":"success"})
+        })
+    },
+    eyetracking:function(req,res){
+        test.eyeTracking(req,async(err,rows)=>{
+            if(err){
+                console.log(err)
+               
+            }
+            console.log(rows)
+
+            return res.json(rows)
         })
     },
     test: function(req, res) {
