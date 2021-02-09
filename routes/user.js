@@ -18,6 +18,7 @@ router.post('/examcreate',testController.examcreate);
 router.post('/examinfo', testController.examinfo);
 router.post('/examdelete',testController.examdelete);
 router.post('/examcomplete',testController.examcomplete);
+
 router.post('/questioninfo',testController.questioninfo);
 router.post('/questionalter',testController.questionalter);
 router.post('/questiondelete',testController.questiondelete);

@@ -148,7 +148,8 @@ module.exports = {
                  var questionInfo = {
                     question_name : con.body[count].question_name,
                     question_score : con.body[count].question_score,
-                    question_text : con.body[count].question_text
+                    question_text : con.body[count].question_text,
+                    question_code : con.body[count].question_code
                 }
                 con.con.query("INSERT INTO question SET ?",questionInfo)
                 con.con.query("select max(question_id) as question_id from question",function(err,rowss){
@@ -183,7 +184,8 @@ module.exports = {
                 question_id : con.body.question_id,
                 question_name : con.body.question_name,
                 question_score : con.body.question_score,
-                question_text : con.body.question_text
+                question_text : con.body.question_text,
+                question_code : con.body.question_code
         }
         con.con.query("update question set ? where question_id=?",[questionInfo,con.body.question_id])
         con.con.query("select * from question where question_id=?",con.body.question_id,callback)
@@ -193,6 +195,7 @@ module.exports = {
         con.con.query("delete from question where question_id=?",con.body.question_id,callback)
     },
     eyeTracking:function(con,callback){
+        console.log(con.body)
         con.con.query("update state SET eye_caution = eye_caution + 1 WHERE s_email=? and test_id=? ",[con.body.s_email,con.body.test_id])
         con.con.query("select s_email,eye_caution from state WHERE s_email=? and test_id=? ",[con.body.s_email,con.body.test_id],callback)
     },
