@@ -22,16 +22,19 @@ module.exports = {
 
     insertInfo : function(con, callback) {
         if(con.body.type=="student"){
-            var stdObj = {
-                s_email : con.body.s_email,
-                s_name : con.body.s_name,
-                s_password : con.body.hashedPassword,
-                s_phone : con.body.s_phone,
-            };
-            console.log("학생 데이터 삽입")
-            con.con.query("INSERT INTO student SET ?", stdObj ,callback)
+            con.con.query("select max(s_number) as s_number from student",function(err,rows){
+                console.log(rows)
+                var stdObj = {
+                    s_email : con.body.s_email,
+                    s_name : con.body.s_name,
+                    s_password : con.body.hashedPassword,
+                    s_phone : con.body.s_phone,
+                    s_number : rows[0].s_number+3
+                };
+                console.log("학생 데이터 삽입")
+                con.con.query("INSERT INTO student SET ?", stdObj ,callback)
+            });
         }
-        
         if(con.body.type=="teacher"){
             var teaObj = {
                 t_email : con.body.t_email,
