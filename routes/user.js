@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const testController = require('../controller/testController');
-const test = require('../model/test');
+
 
 router.post('/login', testController.login);
 router.post('/logout', testController.logout);
