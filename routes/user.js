@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const testController = require('../controller/testController');
+const test = require('../model/test');
 
 
 router.post('/login', testController.login);
@@ -23,5 +24,8 @@ router.post('/questioninfo',testController.questioninfo);
 router.post('/questionalter',testController.questionalter);
 router.post('/questiondelete',testController.questiondelete);
 router.post('/eyetracking',testController.eyetracking)
+
+router.post('/roomcreate', testController.roomcreate);
+router.post('/cautionpage',testController.cautionpage);
 module.exports= router;
 
