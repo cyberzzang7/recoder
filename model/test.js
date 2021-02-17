@@ -77,16 +77,30 @@ module.exports = {
         if ( typeof con.body.s_email == "undefined"){ 
             con.con.query(
             `SELECT 
+            (select count(*) from test where t.class_code=?) as test_count,
+            (select count(*) from user_relation_class u WHERE t.class_code = u.class_code AND recognize = 1) as student_count,
             t.test_id,
             t.test_name, 
             (select count(*) from test_relation_question where test_id=t.test_id) AS questioncount ,
             date_format(t.test_start, '%Y-%m-%d %H:%i:%s') AS test_start,
             date_format(t.test_end, '%Y-%m-%d %H:%i:%s') AS test_end,
             t.t_test_status 
-            FROM test t WHERE t.class_code=?`,con.body.class_code,callback)
+            FROM test t WHERE t.class_code=?`,[con.body.class_code,con.body.class_code,con.body.class_code],callback)
         }
         if ( typeof con.body.t_email == "undefined"){
-
+            con.con.query(
+            `SELECT
+            (select class_name from class where class_code=?) as class_name,
+            t.test_id,
+            t.test_name,
+            (select count(*) from test_relation_question where test_id=t.test_id) AS questioncount ,
+            date_format(t.test_start, '%Y-%m-%d') AS date,
+            date_format(t.test_start, '%p %H:%i') AS test_start,
+            date_format(t.test_end, '%p %H:%i') AS test_end,
+            TIMESTAMPDIFF(minute, date_format(t.test_start, '%Y-%m-%d %H:%i'),  date_format(t.test_end,'%Y-%m-%d %H:%i')) AS time_diff,
+            t.s_test_status
+            FROM test t
+            WHERE t.class_code=?`,[con.body.class_code,con.body.class_code],callback)
         }
     },
     examDelete: function(con,callback){
@@ -101,7 +115,6 @@ module.exports = {
             con.con.query(`
             SELECT 
             c.class_num,
-            c.class_name,
             c.class_name,
             c.class_code,
             u.recognize 

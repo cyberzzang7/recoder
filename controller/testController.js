@@ -1,7 +1,8 @@
 const test = require('../model/test');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-
+const express = require('express');
+var app = express();
 module.exports = {
     login: async (req, res)=>{
         console.log(req.body)
@@ -56,7 +57,7 @@ module.exports = {
                     }
 
                     res.cookie('jwt',token,cookieOptions)
-                    return res.json({"login":"success","token":token,"type":"student","s_name":rows[0].s_name})
+                    return res.json({"login":"success","token":token,"type":"student","s_name":rows[0].s_name,"s_number":rows[0].s_number})
                     
                 }
             })
@@ -233,6 +234,11 @@ module.exports = {
             return res.json({"mes":"success"})
         })
     },
+    cautionpage: function (req,res){
+        test.cautionPage(req,async(err,rows)=>{
+            
+        })
+    },
     examcomplete:function(req,res){
         test.classInfo(req,async(err,rows)=>{
             req.classInfo = rows
@@ -287,6 +293,27 @@ module.exports = {
             return res.json(rows)
         })
     },
+    // roomcreate:function(req,res){
+    //     //ㅡㅡㅡㅡㅡㅡ웹 소켓 ㅡㅡㅡㅡㅡㅡ//
+    // const server = require('http').createServer(app).listen(3001, ()=> {
+    //     console.log("포트 3001에 연결되었습니다.")
+    // });
+        
+    // const options = { 
+    //     cors:true,
+    //     origins:["http://127.0.0.1:3001","*"], };
+    //     const io = require('socket.io')(server,options);
+    //     io.on('connection', socket=>{
+    //         console.log("connect client by Socket.io", socket.request.connection._peername);
+    //         socket.to(req.body.test_id).emit('some event')   
+    //         socket.join(req.body.test_id)
+    //         console.log(socket.adapter.rooms)
+    // })
+    
+
+    // return res.send({"mes":"success","room":"방이 개설 되었습니다."})
+
+    // },
     test: function(req, res) {
         console.log(req.body)
         res.send("서버테스트")
