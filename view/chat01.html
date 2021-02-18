@@ -23,6 +23,20 @@
                 connectToServer(host, port);
 
                 // 로그인 버튼을 클릭하면 처리
+                $("#namevalue").bind('click', function (event) {
+                    var name = $('#name').val();
+
+                    var output = {
+                        name: name
+                    }
+                    console.log('서버로 보낼 데이터 : ' + JSON.stringify(output));
+                    if (socket == undefined) {
+                        alert('서버에 연결되어 있지 않습니다. 먼저 서버에 연결하세요.');
+                        return;
+                    }
+
+                    socket.emit("user_connected", name);
+                })
                 $("#loginButton").bind('click', function (event) {
                     var id = $('#idInput').val();
                     var password = $('#idInput').val();
@@ -193,6 +207,7 @@
                         }
                     }
                 })
+
             })
 
             socket.on('disconnect', function () {
@@ -215,6 +230,11 @@
         <input type="text" id="portInput" value="3001">
         <input type="button" id="connectButton" value="연결하기">
     </div>
+    <br>
+
+    <input type="text" id="name" placeholder="Enter name">
+    <input type="button" id="namevalue" value="이름전송">
+
     <br>
     <div>
         <input type="text" id="idInput" value="test01">

@@ -280,4 +280,18 @@ module.exports = {
         con.con.query("UPDATE state SET eye_caution = eye_caution + 1 WHERE s_email=? AND test_id=? ",[con.body.s_email,con.body.test_id])
         con.con.query("SELECT s_email,eye_caution FROM state WHERE s_email=? AND test_id=? ",[con.body.s_email,con.body.test_id],callback)
     },
+    cautionPage:function(con,callback){
+        con.con.query(`
+        SELECT
+        t.test_name,
+        date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,
+        date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,
+        (select count(*) from test_relation_question where test_id=t.test_id) AS questioncount,
+        (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score,
+        TIMESTAMPDIFF(minute, date_format(t.test_start, '%Y-%m-%d %H:%i'),  date_format(t.test_end,'%Y-%m-%d %H:%i')) AS time_diff,
+        t.test_caution  
+        FROM test t 
+        WHERE t.test_id=?`,[con.body.test_id,con.body.test_id],callback)
+        
+    }
 }

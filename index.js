@@ -27,11 +27,21 @@ console.log(server)
 const options = { 
     cors:true,
     origins:["http://127.0.0.1:3001","*"], };
+var users = [];
 
 const io = require('socket.io')(server,options);
 io.on('connection', socket=>{
     console.log("connect client by Socket.io", socket.request.connection._peername);
    
+
+    socket.on("user_connected",function(username){
+        users[username] = socket.id;
+        console.log(users)
+        console.log(username)
+        io.emit("user_connected",username);
+    })
+
+
     socket.on('message',function(message){
         console.log('message 이벤트를 받았습니다.');
         console.dir(message);

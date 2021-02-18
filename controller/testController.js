@@ -236,7 +236,13 @@ module.exports = {
     },
     cautionpage: function (req,res){
         test.cautionPage(req,async(err,rows)=>{
-            
+            if(err){
+                console.log(err)
+               
+            }
+            console.log(rows)
+
+            return res.json(rows)
         })
     },
     examcomplete:function(req,res){
