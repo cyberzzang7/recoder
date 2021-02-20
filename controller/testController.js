@@ -166,15 +166,15 @@ module.exports = {
 
     classdelete:function(req,res){
         console.log(req.body)
-        test.classDelete(req, async(err,rows)=>{
-            
+        test.classDelete(req,async(err,rows)=> {
             if(err){
                 console.log(err)
             }
-         
-            console.log({"mes":"success"})
-
+            
+           
+            
             return res.json({"mes":"success"})
+      
         })
     },
     usermanagement:function(req,res) {

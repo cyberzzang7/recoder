@@ -135,20 +135,36 @@ module.exports = {
         // where class.class_code=user_relation_class.class_code and user_relation_class.s_email=?`,con.body.s_email,callback)
     }, // 쿼리 수정 필요 중복값 많이 나옴. 
     classDelete: function(con,callback){
-        let count = 0
-        if(con.body.length==1){
-            con.con.query("DELETE FROM test WHERE class_code",con.body[count].class_code)
-            con.con.query("DELETE FROM user_relation_class WHERE class_code=?",con.body[0].class_code)
-            con.con.query("DELETE FROM class WHERE class_code=?",con.body[0].class_code)
-        } else {
-            for(count =0; con.body.length>count; count++){
-                con.con.query("DELETE FROM test WHERE class_code=?",con.body[count].class_code)
-                con.con.query("DELETE FROM user_relation_class WHERE class_code=?",con.body[count].class_code)
-                con.con.query("DELETE FROM class WHERE class_code=?",con.body[count].class_code)
-            }
+        for(var count = 0 ; con.body.length>count; count++){
+             con.con.query("SELECT test_id FROM test WHERE class_code=?",con.body[count].class_code,function(err,rows){
+                console.log(rows)
+                for(var count2 = 0 ; rows.length>count2; count2++){
+                    con.con.query("DELETE FROM test_relation_question WHERE test_id=?",rows[count2].test_id)
+                    con.con.query("DELETE FROM state WHERE test_id=?",rows[count2].test_id)
+                    console.log("삭제완료")
+                }
+            })
+                 con.con.query("DELETE FROM test WHERE class_code=?",con.body[count].class_code)
+                 con.con.query("DELETE FROM user_relation_class WHERE class_code=?",con.body[count].class_code)
+                 con.con.query("DELETE FROM class WHERE class_code=?",con.body[count].class_code)
         }
          con.con.query("SELECT * FROM class WHERE t_email=?",con.body[0].t_email,callback)
     },
+    // testId: function(con,callback){
+    //     for(var count = 0 ; con.body.length>count; count++){
+    //          con.con.query("SELECT test_id FROM test WHERE class_code=?",con.body[count].class_code,function(err,rows){
+    //             console.log(rows)
+    //             for(var count2 = 0 ; rows.length>count2; count2++){
+    //                 con.con.query("DELETE FROM test_relation_question WHERE test_id=?",rows[count2].test_id)
+    //                 con.con.query("DELETE FROM state WHERE test_id=?",rows[count2].test_id)
+    //                 console.log("삭제완료")
+    //             }
+    //         })
+    //              con.con.query("DELETE FROM test WHERE class_code=?",con.body[count].class_code)
+    //              con.con.query("DELETE FROM user_relation_class WHERE class_code=?",con.body[count].class_code)
+    //              con.con.query("DELETE FROM class WHERE class_code=?",con.body[count].class_code)
+    //     }
+    // },
     userManagement:function(con,callback){
         con.con.query(
             `SELECT 
