@@ -1,8 +1,7 @@
 const test = require('../model/test');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const express = require('express');
-var app = express();
+
 module.exports = {
     login: async (req, res)=>{
         console.log(req.body)
@@ -146,11 +145,15 @@ module.exports = {
                 console.log(err)
             }
             console.log(rows)
-
-            return res.json(rows)
+            if(rows.length>0) {
+                return res.json(rows)
+            } else {
+                return res.json({"mes":"is not test"})
+            }
         })
     },
     classjoin:function(req,res){
+      
         test.classJoin(req, async(err,rows)=>{
             if(err){
                 console.log(err)
@@ -162,10 +165,13 @@ module.exports = {
     },
 
     classdelete:function(req,res){
+        console.log(req.body)
         test.classDelete(req, async(err,rows)=>{
+            
             if(err){
                 console.log(err)
             }
+         
             console.log({"mes":"success"})
 
             return res.json({"mes":"success"})
