@@ -137,10 +137,12 @@ module.exports = {
     classDelete: function(con,callback){
         let count = 0
         if(con.body.length==1){
+            con.con.query("DELETE FROM test WHERE class_code",con.body[count].class_code)
             con.con.query("DELETE FROM user_relation_class WHERE class_code=?",con.body[0].class_code)
             con.con.query("DELETE FROM class WHERE class_code=?",con.body[0].class_code)
         } else {
             for(count =0; con.body.length>count; count++){
+                con.con.query("DELETE FROM test WHERE class_code=?",con.body[count].class_code)
                 con.con.query("DELETE FROM user_relation_class WHERE class_code=?",con.body[count].class_code)
                 con.con.query("DELETE FROM class WHERE class_code=?",con.body[count].class_code)
             }
