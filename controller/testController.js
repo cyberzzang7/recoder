@@ -118,16 +118,15 @@ module.exports = {
     },
 
     classcreate: function(req,res){
-      
         test.classcodevalidate(req, async(err,rows)=>{
-                console.log(rows)
+            if(err){
+                console.log(err)
+            }
 
-                return res.json(rows)
+            console.log(rows)
+
+            return res.json(rows)
         })
-    
-        // test.classcreate(req, async(err,rows)=>{
-        // })
-        
     },
     classlist: function(req,res){
         test.classList(req,async(err,rows)=>{
@@ -135,19 +134,20 @@ module.exports = {
                 console.log(err)
             }
             console.log(rows)
-            
+            console.log("흠 뭐지")
             return res.json(rows)
         })
     },
     classinfo:function(req,res){
-        test.classInfo(req, async(err,rows)=>{
+        test.classInfo(req, function(err,rows){
             if(err){
                 console.log(err)
             }
-            console.log(rows)
+        
             if(rows.length>0) {
                 return res.json(rows)
-            } else {
+            } 
+            if(rows.length==0) {
                 return res.json({"mes":"is not test"})
             }
         })
