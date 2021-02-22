@@ -173,7 +173,7 @@ module.exports = {
             
            
             
-            return res.json({"mes":"success"})
+            return res.json({"mes":"success",rows})
       
         })
     },

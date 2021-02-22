@@ -21,6 +21,7 @@ module.exports = {
     },
 
     insertInfo : function(con, callback) {
+        console.log(con.body.s_email)
         if(con.body.type=="student"){
             con.con.query("SELECT MAX(s_number) AS s_number FROM student",function(err,rows){
                 console.log(rows)
@@ -31,11 +32,12 @@ module.exports = {
                     s_phone : con.body.s_phone,
                     s_number : rows[0].s_number+3
                 };
+                console.log(stdObj)
                 console.log("학생 데이터 삽입")
                 con.con.query("INSERT INTO student SET ?", stdObj ,callback)
             });
-        }
-        if(con.body.type=="teacher"){
+        } 
+        if(con.body.type=="teacher") {
             var teaObj = {
                 t_email : con.body.t_email,
                 t_name : con.body.t_name,
@@ -137,7 +139,7 @@ module.exports = {
     classDelete: function(con,callback){
         for(var count = 0 ; con.body.length>count; count++){
              con.con.query("SELECT test_id FROM test WHERE class_code=?",con.body[count].class_code,function(err,rows){
-                console.log(rows)
+                console.log(rows[0].test_id)
                 for(var count2 = 0 ; rows.length>count2; count2++){
                     con.con.query("DELETE FROM test_relation_question WHERE test_id=?",rows[count2].test_id)
                     con.con.query("DELETE FROM state WHERE test_id=?",rows[count2].test_id)
@@ -148,7 +150,7 @@ module.exports = {
                  con.con.query("DELETE FROM user_relation_class WHERE class_code=?",con.body[count].class_code)
                  con.con.query("DELETE FROM class WHERE class_code=?",con.body[count].class_code)
         }
-         con.con.query("SELECT * FROM class WHERE t_email=?",con.body[0].t_email,callback)
+         con.con.query("SELECT * FROM class WHERE class_code=?",con.body[0].class_code,callback)
     },
     // testId: function(con,callback){
     //     for(var count = 0 ; con.body.length>count; count++){
