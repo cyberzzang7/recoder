@@ -314,5 +314,24 @@ module.exports = {
         FROM test t 
         WHERE t.test_id=?`,[con.body.test_id,con.body.test_id],callback)
         
-    }
+    },
+    stateView:function(con,callback){
+        con.con.query(`
+        SELECT
+        *
+        FROM state s
+        WHERE s.test_id=?
+        `,con.body.test_id,callback)
+    },
+    studentName:function(con,callback){
+        con.con.query(`
+        SELECT 
+        s_name 
+        FROM student s LEFT OUTER JOIN state st 
+        ON s.s_email=st.s_email 
+        WHERE st.test_id=?`,con.body.test_id,callback)
+    },
+    questionGrading:function(con,callback){
+        
+    },
 }

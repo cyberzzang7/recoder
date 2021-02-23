@@ -23,9 +23,13 @@ router.post('/examcomplete',testController.examcomplete);
 router.post('/questioninfo',testController.questioninfo);
 router.post('/questionalter',testController.questionalter);
 router.post('/questiondelete',testController.questiondelete);
+router.post('/questiongrading',testController.questiongrading)
 router.post('/eyetracking',testController.eyetracking)
 
 // router.post('/roomcreate', testController.roomcreate);
 router.post('/cautionpage',testController.cautionpage);
+
+router.post('/stateview',testController.stateview);
+
 module.exports= router;
 
