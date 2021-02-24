@@ -184,6 +184,16 @@ module.exports = {
       
         })
     },
+    classuserdelete:function(req,res){
+        test.classUserDelete(req,async(err,rows)=> {
+            if(err){
+                console.log(err)
+            }
+            console.log(rows)
+            
+            return res.json({"mes":"success"})
+        })
+    },
     usermanagement:function(req,res) {
         test.userManagement(req,async(err,rows)=>{
             if(err){

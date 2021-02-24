@@ -79,6 +79,12 @@ module.exports = {
         if ( typeof con.body.s_email == "undefined"){ 
             con.con.query(
             `SELECT 
+            (select count(test_id) from state where test_id = t.test_id and test_validation = 1) as complete_student,
+            (select count(test_id) from state where test_id = t.test_id) as total_student,
+            (SELECT avg(question_score) FROM test te JOIN test_relation_question tr ON te.test_id=tr.test_id JOIN question q ON q.question_id=tr.question_id 
+            where te.test_id=t.test_id) as average_score,
+            (SELECT sum(question_score) FROM test te JOIN test_relation_question tr ON te.test_id=tr.test_id JOIN question q ON q.question_id=tr.question_id 
+            where te.test_id=t.test_id) as total_score,
             (select count(*) from test where t.class_code=?) as test_count,
             (select count(*) from user_relation_class u WHERE t.class_code = u.class_code AND recognize = 1) as student_count,
             t.test_id,
@@ -104,6 +110,9 @@ module.exports = {
             FROM test t
             WHERE t.class_code=?`,[con.body.class_code,con.body.class_code],callback)
         }
+    },
+    totalScore:function(con,callback){
+
     },
     examDelete: function(con,callback){
         con.con.query("DELETE FROM test_relation_question WHERE test_id=?",con.body.test_id)
@@ -177,6 +186,12 @@ module.exports = {
             FROM student s LEFT OUTER JOIN user_relation_class u 
             ON s.s_email=u.s_email 
             WHERE class_code=?`,con.body.class_code,callback)
+    },
+    classUserDelete:function(con,callback){
+        con.con.query(
+            `DELETE FROM user_relation_class 
+            WHERE s_email=? AND class_code=?
+            `,[con.body.s_email,con.body.class_code],callback)
     },
     classRecognize:function(con,callback){
         console.log(con.body.length)
@@ -331,7 +346,7 @@ module.exports = {
         ON s.s_email=st.s_email 
         WHERE st.test_id=?`,con.body.test_id,callback)
     },
-    questionGrading:function(con,callback){
+    // questionGrading:function(con,callback){
         
-    },
+    // },
 }
