@@ -359,7 +359,8 @@ module.exports = {
             if(err){
                 console.log(err)
             }
-            if(typeof req.body.s_email=="undefined"){
+            console.log(req.body)
+            
             test.studentName(req,async(err,rowss)=>{
                 console.log(rowss)
                        if(rows.length>0){
@@ -373,9 +374,10 @@ module.exports = {
                     }
 
             })
-        }else if(typeof req.body.t_email=="undefined"){
-            return res.json(rows)
-        }
+            
+        // }else if(typeof req.body.t_email=="undefined"){
+        //     return res.json(rows)
+        // }
             
         })
     },
