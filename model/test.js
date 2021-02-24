@@ -358,7 +358,7 @@ module.exports = {
         ON s.s_email=st.s_email 
         WHERE st.test_id=?`,con.body.test_id,callback)
     },
-    questionGrading:function(con,callback){
+    testGradingPage:function(con,callback){
         con.con.query(`
         SELECT
         q.question_name,
