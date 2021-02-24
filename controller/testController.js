@@ -268,6 +268,17 @@ module.exports = {
             return res.json(rows)
         })
     },
+    testgradingpage:function(req,res){
+      test.testGradingPage(req,async(err,rows)=>{
+          if(err){
+                console.log(err)
+               
+            }
+            console.log(rows)
+
+            return res.json(rows)
+      })  
+    },
     cautionpage: function (req,res){
         test.cautionPage(req,async(err,rows)=>{
             if(err){
@@ -321,17 +332,6 @@ module.exports = {
 
             return res.json({"mes":"success"})
         })
-    },
-    questiongrading:function(req,res){
-      test.questionGrading(req,async(err,rows)=>{
-          if(err){
-                console.log(err)
-               
-            }
-            console.log(rows)
-
-            return res.json(rows)
-      })  
     },
     eyetracking:function(req,res){
         test.eyeTracking(req,async(err,rows)=>{
