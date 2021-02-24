@@ -293,6 +293,16 @@ module.exports = {
             ON s.s_email=state.s_email 
             WHERE state.test_id=?`,con.classInfo[1].test_id,callback)
     },
+    testPaper:function(con,callback){
+        con.con.query(`
+        SELECT
+        q.question_name,
+        q.question_score,
+        q.question_text,
+        q.question_code
+        FROM question q JOIN test_relation_question tr ON q.question_id=tr.question_id JOIN test t ON t.test_id=tr.test_id
+        WHERE t.test_id = ?`,con.body.test_id,callback)
+    },
     questionInfo:function(con,callback){
         con.con.query("SELECT * FROM question WHERE question_id=?",con.body.question_id,callback)
     },
@@ -348,7 +358,16 @@ module.exports = {
         ON s.s_email=st.s_email 
         WHERE st.test_id=?`,con.body.test_id,callback)
     },
-    // questionGrading:function(con,callback){
-        
-    // },
+    questionGrading:function(con,callback){
+        con.con.query(`
+        SELECT
+        q.question_name,
+        q.question_score,
+        q.question_text,
+        qr.question_grade,
+        qr.compile_code,
+        (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
+        FROM question_result qr JOIN question q ON q.question_id=qr.question_id JOIN test t ON t.test_id=qr.test_id
+        WHERE t.test_id = ? and qr.s_email=?`,[con.body.test_id,con.body.test_id,con.body.s_email],callback)
+    },
 }

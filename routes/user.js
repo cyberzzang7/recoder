@@ -24,10 +24,12 @@ router.post('/examinfo', testController.examinfo);
 router.post('/examdelete',testController.examdelete);
 router.post('/examcomplete',testController.examcomplete);
 
+router.post('/testpaper',testController.testpaper);
+
 router.post('/questioninfo',testController.questioninfo);
 router.post('/questionalter',testController.questionalter);
 router.post('/questiondelete',testController.questiondelete);
-// router.post('/questiongrading',testController.questiongrading);
+router.post('/questiongrading',testController.questiongrading);
 router.post('/eyetracking',testController.eyetracking)
 
 // router.post('/roomcreate', testController.roomcreate);
