@@ -255,13 +255,32 @@ INSERT INTO `test`(`class_code`, `test_name`, `test_start`, `test_end`, `test_wa
         "question_text":"엄마가좋아? 아빠가좋아?"
     }
 ]
+DROP TABLE IF EXISTS `state`;
+CREATE TABLE `state` (
+	`state_number` INT(11) NOT NULL,
+	`test_id`	INT(11)	NOT NULL	COMMENT '시험 고유 번호',
+	`s_email`	VARCHAR(100)	NOT NULL,
+	`s_retake`	TINYINT	NOT NULL,
+	`mic_caution`	TINYINT	NOT NULL,
+	`eye_caution`	TINYINT	NOT NULL,
+	`test_validation`	Boolean	NOT NULL	COMMENT '0 미응시 1 응시완료',
+	`test_start_time`	Date	NOT NULL,
+	`test_end_time`	Date	NOT NULL,
+	`total_score`	Int	NOT NULL,
+	`score_validation`	Boolean	NOT NULL	COMMENT '0 채점하기 1 채점완료'
+);
+ALTER TABLE state
+ADD CONSTRAINT PK PRIMARY KEY (state_number)
 
 
-ALTER TABLE question MODIFY question_id INT NOT NULL AUTO_INCREMENT;
+DROP TABLE IF EXISTS `test_relation_question`;
 
-
+CREATE TABLE `test_relation_question` (
+	`test_id`	INT(11)	NOT NULL	COMMENT '시험 고유 번호',
+	`question_id`	INT(11)	NOT NULL
+);
 
 SELECT t.test_name, (select count(*) from test_relation_question where test_id=t.test_id) as questioncount ,t.test_start,t.test_end,t.test_status FROM test t WHERE t.class_code="876414"
 
-INSERT INTO `state` (`test_id`, `s_email`, `s_retake`, `mic_caution`, `eye_caution`, `test_validation`, `test_start_time`, `test_end_time`, `total_score`) VALUES ('3', 'cyberzzang3@g.yju.ac.kr', '1', '1', '1', '1', '2014-00-00', '0000-00-00', '80')
+INSERT INTO `state` (`test_id`, `s_email`, `s_retake`, `mic_caution`, `eye_caution`, `test_validation`, `test_start_time`, `test_end_time`, `total_score`,`score_validation`) VALUES ('44', 'cyberzzang3@g.yju.ac.kr', '1', '1', '1', '1', '2014-00-00', '0000-00-00', '80','0')
 -- 통계 삽입 --

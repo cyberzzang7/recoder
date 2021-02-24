@@ -10,11 +10,15 @@ router.post('/signup', testController.signup);
 router.post('/classcreate', testController.classcreate);
 router.post('/test', testController.test);
 router.post('/classinfo', testController.classinfo);
-router.post('/classlist',testController.classlist);
+router.post('/classlist',testController.classli st);
 router.post('/classjoin', testController.classjoin);
 router.post('/classdelete',testController.classdelete);
-router.post('/usermanagement', testController.usermanagement);
 router.post('/classrecognize',testController.classrecognize);
+
+router.post('/classuserdelete',testController.classuserdelete);
+router.post('/usermanagement', testController.usermanagement);
+
+
 router.post('/examcreate',testController.examcreate);
 router.post('/examinfo', testController.examinfo);
 router.post('/examdelete',testController.examdelete);
@@ -23,7 +27,7 @@ router.post('/examcomplete',testController.examcomplete);
 router.post('/questioninfo',testController.questioninfo);
 router.post('/questionalter',testController.questionalter);
 router.post('/questiondelete',testController.questiondelete);
-router.post('/questiongrading',testController.questiongrading)
+// router.post('/questiongrading',testController.questiongrading);
 router.post('/eyetracking',testController.eyetracking)
 
 // router.post('/roomcreate', testController.roomcreate);
