@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt')
-const SALT_ROUNDS = 12;
 module.exports = {
     stdlogin : function(con, callback) {
         con.con.query("SELECT * FROM student WHERE s_email=? ",con.body.s_email, callback)
@@ -341,14 +339,25 @@ module.exports = {
         
     },
     stateView:function(con,callback){
-        con.con.query(`
-        SELECT
-        *,
-        (SELECT count(question_id) FROM test_relation_question tr where tr.test_id =?) as question_count,
-        (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count
-        FROM state s
-        WHERE s.test_id=?
-        `,[con.body.test_id,con.body.test_id],callback)
+        console.log(typeof con.body.s_email)
+        if ( typeof con.body.s_email == "string") {
+            con.con.query(`
+            SELECT
+            *,
+            (select sum(qr.question_grade) from question_result qr where qr.test_id=? and qr.s_email=?) as student_score,
+            (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
+            FROM state s 
+            WHERE s.test_id=? AND s.s_email=?`,[con.body.test_id,con.body.s_email,con.body.test_id,con.body.test_id,con.body.s_email],callback)
+        } else {
+             con.con.query(`
+            SELECT
+            *,
+            (SELECT count(question_id) FROM test_relation_question tr where tr.test_id =?) as question_count,
+            (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count
+            FROM state s
+            WHERE s.test_id=?
+            `,[con.body.test_id,con.body.test_id],callback)
+        }
     },
     studentName:function(con,callback){
         con.con.query(`
@@ -361,6 +370,7 @@ module.exports = {
     testGradingPage:function(con,callback){
         con.con.query(`
         SELECT
+        qr.s_email,
         q.question_name,
         q.question_score,
         q.question_text,
@@ -370,4 +380,10 @@ module.exports = {
         FROM question_result qr JOIN question q ON q.question_id=qr.question_id JOIN test t ON t.test_id=qr.test_id
         WHERE t.test_id = ? and qr.s_email=?`,[con.body.test_id,con.body.test_id,con.body.s_email],callback)
     },
+    testGrading:function(con,callback){
+        console.log(con.body)
+        con.con.query(`
+        UPDATE question_result SET question_grade=? WHERE s_email=? AND test_id=? AND question_id =?
+        `,[con.body.question_grade,con.body.s_email,con.body.test_id,con.body.question_id],callback)
+    }
 }

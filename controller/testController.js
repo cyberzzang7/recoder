@@ -279,6 +279,16 @@ module.exports = {
             return res.json(rows)
       })  
     },
+    testgrading:function(req,res) {
+        test.testGrading(req,async(err,rows)=>{
+            if(err) {
+                console.log(err)
+            }
+            console.log(rows)
+
+            return res.json({"mes":"success"})
+        })
+    },
     cautionpage: function (req,res){
         test.cautionPage(req,async(err,rows)=>{
             if(err){
@@ -349,6 +359,7 @@ module.exports = {
             if(err){
                 console.log(err)
             }
+            if(typeof req.body.s_email=="undefined"){
             test.studentName(req,async(err,rowss)=>{
                 console.log(rowss)
                        if(rows.length>0){
@@ -362,6 +373,9 @@ module.exports = {
                     }
 
             })
+        }else if(typeof req.body.t_email=="undefined"){
+            return res.json(rows)
+        }
             
         })
     },
