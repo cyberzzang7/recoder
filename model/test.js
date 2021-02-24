@@ -333,10 +333,12 @@ module.exports = {
     stateView:function(con,callback){
         con.con.query(`
         SELECT
-        *
+        *,
+        (SELECT count(question_id) FROM test_relation_question tr where tr.test_id =?) as question_count,
+        (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count
         FROM state s
         WHERE s.test_id=?
-        `,con.body.test_id,callback)
+        `,[con.body.test_id,con.body.test_id],callback)
     },
     studentName:function(con,callback){
         con.con.query(`
