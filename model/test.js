@@ -340,15 +340,15 @@ module.exports = {
     },
     stateView:function(con,callback){
         console.log(typeof con.body.s_email)
-        // if ( typeof con.body.s_email == "string") {
-        //     con.con.query(`
-        //     SELECT
-        //     *,
-        //     (select sum(qr.question_grade) from question_result qr where qr.test_id=? and qr.s_email=?) as student_score,
-        //     (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
-        //     FROM state s 
-        //     WHERE s.test_id=? AND s.s_email=?`,[con.body.test_id,con.body.s_email,con.body.test_id,con.body.test_id,con.body.s_email],callback)
-        // } else {
+        if ( typeof con.body.s_email == "string") {
+            con.con.query(`
+            SELECT
+            *,
+            (select sum(qr.question_grade) from question_result qr where qr.test_id=? and qr.s_email=?) as student_score,
+            (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
+            FROM state s 
+            WHERE s.test_id=? AND s.s_email=?`,[con.body.test_id,con.body.s_email,con.body.test_id,con.body.test_id,con.body.s_email],callback)
+        } else {
              con.con.query(`
             SELECT
             *,
@@ -357,7 +357,7 @@ module.exports = {
             FROM state s
             WHERE s.test_id=?
             `,[con.body.test_id,con.body.test_id],callback)
-        
+        }
     },
     studentName:function(con,callback){
         con.con.query(`
