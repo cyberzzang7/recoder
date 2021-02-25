@@ -17,7 +17,6 @@ app.use(bodyParser.json());
 var user = require('./routes/user');
 app.use('/', user);
 
-//ㅡㅡㅡㅡㅡㅡ웹 소켓 ㅡㅡㅡㅡㅡㅡ//
 
 app.listen(3000, ()=>console.log('Express server is running at port no : 3000!'));
 
@@ -29,23 +28,36 @@ const server = require('http').createServer(app).listen(3001, ()=> {
 
 const options = { 
 cors:true,
-    origins:["http://127.0.0.1:3001","*"], };
+    origins:["http://3.89.30.234:3001","*"], };
 var users = [];
 
 const io = require('socket.io')(server,options);
 var so = require('./socket/socket');
 
 io.on('connection', socket=>{
-    console.log("connect client by Socket.io", socket.request.connection._peername);
+    console.log("connect client by Socket.io", socket.request.connection._peername, socket.id);
    
     so.test(async(err,rows)=>{
          return rows
     });
-    socket.on("user_connected",function(username){
-      
-        users[username] = socket.id;
-        console.log(users)
-        console.log(username)
-        io.emit("user_connected",username);
+    socket.on("create",function(create){
+        console.log(create.test_id);
+        socket.join(create.test_id);
+        console.log(io.sockets.adapter.rooms)
+        io.to(create.test_id).emit('create',"방이 개설 되었습니다.");
+    
+                var curRoom = io.sockets.adapter.rooms.get(create.test_id);
+                
+                 curRoom.test_id = create.test_id;
+                 curRoom.t_email = create.t_email;
+                 console.log(curRoom)
+    })
+    
+    socket.on("join",function(join){
+        console.log(join)
+        console.log(join.s_email);
+        socket.join(join.test_id);
+        // console.log(io.sockets.adapter.rooms.get(join.test_id.get(join.t_email)))
+        io.to(join.test_id).emit('student_join','학생 입장!');
     })
 })

@@ -83,7 +83,11 @@
                         return;
                     }
 
-                    socket.emit('room', output);
+                    socket.emit('create', output);
+
+                    socket.on('student_join', function (msg) {
+                        console.log(msg)
+                    });
                 })
 
                 // 방 없애기 버튼을 클릭하면 처리
