@@ -105,8 +105,8 @@ module.exports = {
             date_format(t.test_end, '%p %H:%i') AS test_end,
             TIMESTAMPDIFF(minute, date_format(t.test_start, '%Y-%m-%d %H:%i'),  date_format(t.test_end,'%Y-%m-%d %H:%i')) AS time_diff,
             t.s_test_status
-            FROM test t
-            WHERE t.class_code=?`,[con.body.class_code,con.body.class_code],callback)
+            FROM test t LEFT OUTER JOIN user_relation_class ur ON t.class_code=ur.class_code
+            WHERE ur.s_email=? and ur.class_code=? and ur.recognize=1`,[con.body.class_code,con.body.s_email,con.body.class_code],callback)
         }
     },
     totalScore:function(con,callback){
@@ -328,6 +328,7 @@ module.exports = {
         con.con.query(`
         SELECT
         t.test_name,
+        (SELECT s_number FROM student WHERE s_email=?),
         date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,
         date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,
         (select count(*) from test_relation_question where test_id=t.test_id) AS questioncount,
@@ -335,7 +336,7 @@ module.exports = {
         TIMESTAMPDIFF(minute, date_format(t.test_start, '%Y-%m-%d %H:%i'),  date_format(t.test_end,'%Y-%m-%d %H:%i')) AS time_diff,
         t.test_caution  
         FROM test t 
-        WHERE t.test_id=?`,[con.body.test_id,con.body.test_id],callback)
+        WHERE t.test_id=?`,[con.body.s_email,con.body.test_id,con.body.test_id],callback)
         
     },
     stateView:function(con,callback){

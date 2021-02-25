@@ -29,7 +29,7 @@ const server = require('http').createServer(app).listen(3001, ()=> {
 
 const options = { 
 cors:true,
-    origins:["http://3.89.30.234:3001","*"], };
+    origins:["http://127.0.0.1:3001","*"], };
 var users = [];
 
 const io = require('socket.io')(server,options);
