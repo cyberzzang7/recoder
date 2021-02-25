@@ -385,5 +385,11 @@ module.exports = {
         con.con.query(`
         UPDATE question_result SET question_grade=? WHERE s_email=? AND test_id=? AND question_id =?
         `,[con.body.question_grade,con.body.s_email,con.body.test_id,con.body.question_id],callback)
+    },
+    snumber:function(con,callback){
+        console.log(con)
+        con.con.query(`
+        SELECT s_number FROM student WHERE s_email=?
+        `,con.s_email,callback)
     }
 }

@@ -2,6 +2,7 @@ const express = require('express');
 var app = express();
 var cors = require('cors');
 const con = require('./config/db');
+const test = require('./model/test');
 
 app.use(function(req, res, next) {
     req.con = con;
@@ -55,9 +56,17 @@ io.on('connection', socket=>{
     
     socket.on("join",function(join){
         console.log(join)
+        join.con=con
         console.log(join.s_email);
         socket.join(join.test_id);
+        test.snumber(join,async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            console.log(rows)
+            io.to(join.test_id).emit('student_join',rows[0]);
+        })
         // console.log(io.sockets.adapter.rooms.get(join.test_id.get(join.t_email)))
-        io.to(join.test_id).emit('student_join','학생 입장!');
+        
     })
 })
