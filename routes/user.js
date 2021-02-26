@@ -18,7 +18,6 @@ router.post('/classrecognize',testController.classrecognize);
 router.post('/classuserdelete',testController.classuserdelete);
 router.post('/usermanagement', testController.usermanagement);
 
-
 router.post('/examcreate',testController.examcreate);
 router.post('/examinfo', testController.examinfo);
 router.post('/examdelete',testController.examdelete);
@@ -32,9 +31,10 @@ router.post('/questioninfo',testController.questioninfo);
 router.post('/questionalter',testController.questionalter);
 router.post('/questiondelete',testController.questiondelete);
 
+router.post('/compile',testController.compile);
+
 router.post('/eyetracking',testController.eyetracking)
 
-// router.post('/roomcreate', testController.roomcreate);
 router.post('/cautionpage',testController.cautionpage);
 
 router.post('/stateview',testController.stateview);

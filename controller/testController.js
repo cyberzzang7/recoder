@@ -379,6 +379,17 @@ module.exports = {
             
         })
     },
+    compile:function(req,res){
+        test.comPile(req,async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+
+            console.log(rows)
+
+            return res.json({"mes":"success"})
+        })
+    },
     // roomcreate:function(req,res){
     //     //ㅡㅡㅡㅡㅡㅡ웹 소켓 ㅡㅡㅡㅡㅡㅡ//
     // const server = require('http').createServer(app).listen(3001, ()=> {

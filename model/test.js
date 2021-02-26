@@ -294,6 +294,8 @@ module.exports = {
     testPaper:function(con,callback){
         con.con.query(`
         SELECT
+        q.question_id,
+        tr.test_id,  
         q.question_name,
         q.question_score,
         q.question_text,
@@ -390,7 +392,27 @@ module.exports = {
     snumber:function(con,callback){
         console.log(con)
         con.con.query(`
-        SELECT s_number FROM student WHERE s_email=?
+        SELECT s_number,s_name FROM student WHERE s_email=?
         `,con.s_email,callback)
+    },
+    comPile:function(con,callback){
+        if(con.body.command == "update"){
+            console.log(con.body)
+            con.con.query(`
+            UPDATE question_result 
+            SET compile_code =?, compile_result =? 
+            WHERE s_email=? and question_id=?`,[con.body.compile_code,con.body.compile_result,con.body.s_email,con.body.question_id],callback)
+        } else if (con.body.command == "insert"){
+            console.log(con.body)
+            var comPileInsert = {
+                    s_email : con.body.s_email,
+                    question_id : con.body.question_id,
+                    test_id : con.body.test_id,
+                    question_grade : null,
+                    compile_code : con.body.compile_code,
+                    compile_result : con.body.compile_result
+            }
+            con.con.query("INSERT INTO question_result SET ?",comPileInsert,callback)
+        }
     }
 }
