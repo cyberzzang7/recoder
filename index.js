@@ -38,14 +38,11 @@ var so = require('./socket/socket');
 io.on('connection', socket=>{
     console.log("connect client by Socket.io", socket.request.connection._peername, socket.id);
    
-    so.test(async(err,rows)=>{
-         return rows
-    });
     socket.on("create",function(create){
         console.log(create.test_id);
         socket.join(create.test_id);
         console.log(io.sockets.adapter.rooms)
-        io.to(create.test_id).emit('create',"방이 개설 되었습니다.");
+        io.to(create.test_id).emit('create',"시험 방이 열렸습니다.");
     
                 var curRoom = io.sockets.adapter.rooms.get(create.test_id);
                 
@@ -67,6 +64,15 @@ io.on('connection', socket=>{
             io.to(join.test_id).emit('student_join',rows[0]);
         })
         // console.log(io.sockets.adapter.rooms.get(join.test_id.get(join.t_email)))
-        
+      
+    socket.on("room_out",function(roomout){
+        console.log(roomout.test_id);
+        console.log("유저가 방을 나갑니다.")
+        socket.leave(roomout.test_id);
+        console.log(io.sockets.adapter.rooms.get(roomout.test_id))
+        io.to(roomout.test_id).emit('room_out',"시험이 종료되고 방을 나갑니다.");
+    
+          
+        })
     })
 })

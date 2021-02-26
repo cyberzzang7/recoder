@@ -323,8 +323,18 @@ module.exports = {
     },
     eyeTracking:function(con,callback){
         console.log(con.body)
-        con.con.query("UPDATE state SET eye_caution = eye_caution + 1 WHERE s_email=? AND test_id=? ",[con.body.s_email,con.body.test_id])
-        con.con.query("SELECT s_email,eye_caution FROM state WHERE s_email=? AND test_id=? ",[con.body.s_email,con.body.test_id],callback)
+        con.con.query(`
+        UPDATE state s
+        INNER JOIN student st 
+        ON s.s_email = st.s_email 
+        SET s.eye_caution = s.eye_caution + 1 
+        WHERE st.s_number=? AND s.test_id=? `,[con.body.s_number,con.body.test_id])
+        con.con.query(`
+        SELECT st.s_number,s.eye_caution 
+        FROM state s 
+        INNER JOIN student st
+        ON s.s_email = st.s_email
+        WHERE st.s_number=? AND s.test_id=? `,[con.body.s_number,con.body.test_id],callback)
     },
     cautionPage:function(con,callback){
         con.con.query(`
