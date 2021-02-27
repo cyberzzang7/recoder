@@ -47,6 +47,7 @@ module.exports = {
         }
         
     },
+    
     classcreate : function(con,callback){
          var classObj = {
                 class_code : a,
@@ -186,10 +187,12 @@ module.exports = {
             WHERE class_code=?`,con.body.class_code,callback)
     },
     classUserDelete:function(con,callback){
-        con.con.query(
-            `DELETE FROM user_relation_class 
-            WHERE s_email=? AND class_code=?
-            `,[con.body.s_email,con.body.class_code],callback)
+        for(var count=0; con.body.length>count; count++){
+            con.con.query(
+                `DELETE FROM user_relation_class 
+                WHERE s_email=? AND class_code=?
+                `,[con.body[count].s_email,con.body[0].class_code],callback)
+        }
     },
     classRecognize:function(con,callback){
         console.log(con.body.length)
@@ -340,7 +343,7 @@ module.exports = {
         con.con.query(`
         SELECT
         t.test_name,
-        (SELECT s_number FROM student WHERE s_email=?),
+        (SELECT s_number FROM student WHERE s_email=?) as s_number,
         date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,
         date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,
         (select count(*) from test_relation_question where test_id=t.test_id) AS questioncount,
