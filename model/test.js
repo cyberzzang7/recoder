@@ -187,7 +187,7 @@ module.exports = {
             WHERE class_code=?`,con.body.class_code,callback)
     },
     classUserDelete:function(con,callback){
-        for(var count=0; con.body.length>count; count++){
+        for(var count=1; con.body.length>count; count++){
             con.con.query(
                 `DELETE FROM user_relation_class 
                 WHERE s_email=? AND class_code=?
@@ -369,10 +369,12 @@ module.exports = {
             SELECT
             *,
             (SELECT count(question_id) FROM test_relation_question tr where tr.test_id =?) as question_count,
-            (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count
+            (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count,
+            (select sum(question_grade) FROM question_result )
+            (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
             FROM state s
             WHERE s.test_id=?
-            `,[con.body.test_id,con.body.test_id],callback)
+            `,[con.body.test_id,con.body.test_id,con.body.test_id],callback)
         }
     },
     studentName:function(con,callback){
