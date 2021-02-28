@@ -303,6 +303,7 @@ module.exports = {
         q.question_score,
         q.question_text,
         q.question_code,
+        t.test_lang,
         t.test_name,
         c.class_name
         FROM question q JOIN test_relation_question tr ON q.question_id=tr.question_id JOIN test t ON t.test_id=tr.test_id JOIN class c ON c.class_code=t.class_code
