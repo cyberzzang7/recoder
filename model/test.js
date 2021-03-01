@@ -342,6 +342,21 @@ module.exports = {
         ON s.s_email = st.s_email
         WHERE st.s_number=? AND s.test_id=? `,[con.s_number,con.test_id],callback)
     },
+    volumeMeter:function(con,callback){
+        console.log(con)
+           con.con.query(`
+        UPDATE state s
+        INNER JOIN student st 
+        ON s.s_email = st.s_email 
+        SET s.mic_caution = s.mic_caution + 1 
+        WHERE st.s_number=? AND s.test_id=? `,[con.s_number,con.test_id])
+        con.con.query(`
+        SELECT st.s_number,s.mic_caution 
+        FROM state s 
+        INNER JOIN student st
+        ON s.s_email = st.s_email
+        WHERE st.s_number=? AND s.test_id=? `,[con.s_number,con.test_id],callback)
+    },
     cautionPage:function(con,callback){
         con.con.query(`
         SELECT
@@ -373,7 +388,7 @@ module.exports = {
             *,
             (SELECT count(question_id) FROM test_relation_question tr where tr.test_id =?) as question_count,
             (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count,
-            (select sum(question_grade) FROM question_result )
+            (select sum(question_grade) FROM question_result) as question_grade,
             (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
             FROM state s
             WHERE s.test_id=?

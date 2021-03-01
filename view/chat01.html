@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>채팅 클라이언트 01</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="http://3.89.30.234:3001/socket.io/socket.io.js"></script>
+    <script src="http://127.0.0.1:3001/socket.io/socket.io.js"></script>
     <script>
         var host;
         var port;
@@ -88,6 +88,7 @@
                     socket.on('student_join', function (msg) {
                         console.log(msg)
                     });
+
                 })
 
                 // 방 없애기 버튼을 클릭하면 처리
@@ -117,8 +118,7 @@
                     var roomId = $('#roomIdInput').val();
 
                     var output = {
-                        command: 'delete',
-                        roomId: roomId
+                        test_id: roomId
                     };
 
                     console.log('서버로 보낼 데이터 : ' + JSON.stringify(output));
@@ -128,7 +128,7 @@
                         return;
                     }
 
-                    socket.emit('room', output);
+                    socket.emit('m_room_out', output);
                 })
                 $("#joinRoomButton").bind('click', function (event) {
                     var test_id = $('#roomIdInput').val();
