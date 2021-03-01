@@ -275,8 +275,18 @@ module.exports = {
                
             }
             console.log(rows)
-
-            return res.json(rows)
+            test.testQuestion(req,async(err,rowss)=>{
+                if(err){
+                    console.log(err)
+               
+                }
+                console.log(rowss)
+                for(count=0,number=1;rowss.length>count;count++,number++){
+                    rows[number]=rowss[count];
+                }
+                return res.json(rows)
+            })
+     
       })  
     },
     testgrading:function(req,res) {

@@ -56,7 +56,7 @@ io.on('connection', socket=>{
             join.con=con
             console.log(join.s_email);
             socket.join(join.test_id);
-              console.log(io.sockets.adapter.rooms)
+            console.log(io.sockets.adapter.rooms)
             test.snumber(join,async(err,rows)=>{
                 if(err){
                     console.log(err)
@@ -85,7 +85,6 @@ io.on('connection', socket=>{
         })
 
         socket.on("eyetracking", function(data){
-            
             data.con=con
             test.eyeTracking(data,async(err,rows)=>{
                 if(err){
@@ -97,7 +96,7 @@ io.on('connection', socket=>{
             })
         })
         socket.on("volumeMeter",function(data){
-           
+            console.log(data)
             data.con=con
             test.volumeMeter(data,async(err,rows)=>{
                 if(err){

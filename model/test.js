@@ -357,7 +357,7 @@ module.exports = {
     },
     volumeMeter:function(con,callback){
         
-           con.con.query(`
+        con.con.query(`
         UPDATE state s
         INNER JOIN student st 
         ON s.s_email = st.s_email 
@@ -428,6 +428,12 @@ module.exports = {
         (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
         FROM question_result qr JOIN question q ON q.question_id=qr.question_id JOIN test t ON t.test_id=qr.test_id
         WHERE t.test_id = ? and qr.s_email=?`,[con.body.test_id,con.body.test_id,con.body.s_email],callback)
+    },
+    testQuestion:function(con,callback){
+        con.con.query(`
+        SELECT question_id
+        FROM test_relation_question
+        WHERE test_id=?`,con.body.test_id,callback)
     },
     testGrading:function(con,callback){
         console.log(con.body)
