@@ -284,7 +284,7 @@ module.exports = {
             if(err) {
                 console.log(err)
             }
-            console.log(rows)
+   
 
             return res.json({"mes":"success"})
         })
@@ -338,7 +338,7 @@ module.exports = {
                 console.log(err)
                
             }
-            console.log(rows)
+   
 
             return res.json({"mes":"success"})
         })
@@ -384,7 +384,7 @@ module.exports = {
                 console.log(err)
             }
 
-            console.log(rows)
+
 
             return res.json({"mes":"success"})
         })

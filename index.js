@@ -83,7 +83,7 @@ io.on('connection', socket=>{
         })
 
         socket.on("eyetracking", function(data){
-            console.log(data)
+            
             data.con=con
             test.eyeTracking(data,async(err,rows)=>{
                 if(err){
@@ -95,14 +95,14 @@ io.on('connection', socket=>{
             })
         })
         socket.on("volumeMeter",function(data){
-            console.log(data)
+           
             data.con=con
             test.volumeMeter(data,async(err,rows)=>{
                 if(err){
                     console.log(err)
                 }
                 console.log(rows)
-                to.to(data.test_id).emit('volumeMeter',rows[0])
+                io.to(data.test_id).emit('volumeMeter',rows[0])
             })
         })
 })
