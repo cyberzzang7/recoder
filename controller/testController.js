@@ -360,21 +360,20 @@ module.exports = {
                 console.log(err)
             }
             if(typeof req.body.s_email=="undefined"){
-            test.studentName(req,async(err,rowss)=>{
-                console.log(rowss)
-                       if(rows.length>0){
-                        for(var count = 0, number = 0; rowss.length>count; count++,number++){
+                test.studentName(req,async(err,rowss)=>{
+                    console.log(rowss)
+                        if(rows.length>0){
+                            for(var count = 0, number = 0; rowss.length>count; count++,number++){
                     
-                            rows[number].s_name = rowss[count].s_name
+                                rows[number].s_name = rowss[count].s_name
                     
                         // 내일 진행 + 구슬이 요청 사항 2개 추가 문제 개수 시험지 개수 학생 명단 이런거 ? 
+                            }
                         }
-          
-                    }
                     return res.json(rows)
                 })
-        }else if(typeof req.body.t_email=="undefined"){
-            return res.json(rows)
+            } else if(typeof req.body.t_email=="undefined"){
+                return res.json(rows)
         }
             
         })

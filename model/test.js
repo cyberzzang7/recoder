@@ -410,8 +410,12 @@ module.exports = {
     snumber:function(con,callback){
         console.log(con)
         con.con.query(`
-        SELECT s_number,s_name FROM student WHERE s_email=?
-        `,con.s_email,callback)
+        SELECT 
+        s_number,
+        s_name, 
+        (SELECT eye_caution FROM state WHERE test_id=? and s_email=?) as eye_caution
+        FROM student WHERE s_email=?
+        `,[con.test_id,con.s_email,con.s_email],callback)
     },
     comPile:function(con,callback){
         if(con.body.command == "update"){
