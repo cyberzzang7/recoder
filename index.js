@@ -74,7 +74,8 @@ io.on('connection', socket=>{
             io.to(roomout.test_id).emit('room_out',"시험이 종료되고 방을 나갑니다.");    
         })
         socket.on("m_room_out",function(m_roomout){
-            console.log(roomout);
+            console.log(m_roomout);
+            
             console.log("선생님이 방을 나갑니다.")
             socket.leave(m_roomout.test_id);
             console.log(io.sockets.adapter.rooms.get(m_roomout.test_id))
@@ -83,14 +84,25 @@ io.on('connection', socket=>{
 
         socket.on("eyetracking", function(data){
             console.log(data)
-            test.eyeTracking(req,async(err,rows)=>{
+            data.con=con
+            test.eyeTracking(data,async(err,rows)=>{
                 if(err){
                     console.log(err)
                
                 }
                 console.log(rows)
-
             io.to(data.test_id).emit('eyetrackingcount',rows[0])
+            })
         })
-     })
+        socket.on("volumeMeter",function(data){
+            console.log(data)
+            data.con=con
+            test.volumeMeter(data,async(err,rows)=>{
+                if(err){
+                    console.log(err)
+                }
+                console.log(rows)
+                to.to(data.test_id).emit('volumeMeter',rows[0])
+            })
+        })
 })
