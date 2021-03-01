@@ -434,7 +434,7 @@ module.exports = {
     },
     comPile:function(con,callback){
         if(con.body.command == "update"){
-            console.log(con.body)
+            console.log(con.body)``
             con.con.query(`
             UPDATE question_result 
             SET compile_code =?, compile_result =? 
