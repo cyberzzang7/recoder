@@ -57,14 +57,15 @@ io.on('connection', socket=>{
             console.log(join.s_email);
             socket.join(join.test_id);
             test.snumber(join,async(err,rows)=>{
-            if(err){
-                console.log(err)
-            }
-            console.log(rows)
-            io.to(join.test_id).emit('student_join',rows[0]);
-        })
+                if(err){
+                    console.log(err)
+                }
+                console.log(rows)
+                io.to(join.test_id).emit('student_join',rows[0]);
+            })
         // console.log(io.sockets.adapter.rooms.get(join.test_id.get(join.t_email)))
-      
+        })
+
         socket.on("room_out",function(roomout){
             console.log(roomout.test_id);
             console.log("유저가 방을 나갑니다.")
@@ -74,5 +75,17 @@ io.on('connection', socket=>{
     
           
         })
-    })
+
+        socket.on("eyetracking", function(data){
+            console.log(data)
+            test.eyeTracking(req,async(err,rows)=>{
+                if(err){
+                    console.log(err)
+               
+                }
+                console.log(rows)
+
+            io.to(data.test_id).emit('eyetrackingcount',rows[0])
+        })
+     })
 })

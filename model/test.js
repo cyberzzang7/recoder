@@ -328,19 +328,19 @@ module.exports = {
         con.con.query("DELETE FROM question WHERE question_id=?",con.body.question_id,callback)
     },
     eyeTracking:function(con,callback){
-        console.log(con.body)
+        console.log(con)
         con.con.query(`
         UPDATE state s
         INNER JOIN student st 
         ON s.s_email = st.s_email 
         SET s.eye_caution = s.eye_caution + 1 
-        WHERE st.s_number=? AND s.test_id=? `,[con.body.s_number,con.body.test_id])
+        WHERE st.s_number=? AND s.test_id=? `,[con.s_number,con.test_id])
         con.con.query(`
         SELECT st.s_number,s.eye_caution 
         FROM state s 
         INNER JOIN student st
         ON s.s_email = st.s_email
-        WHERE st.s_number=? AND s.test_id=? `,[con.body.s_number,con.body.test_id],callback)
+        WHERE st.s_number=? AND s.test_id=? `,[con.s_number,con.test_id],callback)
     },
     cautionPage:function(con,callback){
         con.con.query(`
