@@ -420,7 +420,7 @@ module.exports = {
     testGradingPage:function(con,callback){
         con.con.query(`
         SELECT
-        tr.question_id,
+        qr.question_id,
         qr.s_email,
         q.question_name,
         q.question_score,
@@ -428,8 +428,8 @@ module.exports = {
         qr.question_grade,
         qr.compile_code,
         (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
-        FROM question_result qr JOIN question q ON q.question_id=qr.question_id JOIN test t ON t.test_id=qr.test_id JOIN test_relation_question tr ON t.test_id=tr.test_id
-        WHERE t.test_id = ? and qr.s_email=?`,[con.body.test_id,con.body.test_id,con.body.s_email],callback)
+        FROM question_result qr JOIN question q ON q.question_id=qr.question_id 
+        WHERE qr.test_id = ? and qr.s_email=?`,[con.body.test_id,con.body.test_id,con.body.s_email],callback)
     },
     testQuestion:function(con,callback){
         con.con.query(`
