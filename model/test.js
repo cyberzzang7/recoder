@@ -295,6 +295,19 @@ module.exports = {
             WHERE state.test_id=?`,con.classInfo[1].test_id,callback)
     },
     testPaper:function(con,callback){
+        // var stateInfo = {
+        //             test_id : con.body[count].question_name,
+        //             s_email : con.body[count].question_score,
+        //             s_retake : con.body[count].question_text,
+        //             mic_caution : con.body[count].question_code,
+        //             eye_caution ,
+        //             test_validation : 0,
+        //             test_start_time: 2021-03-01,
+        //             test_end_time: 2021-03-02,
+        //             total_score : 100,
+        //             score_validation : 0
+        //         }
+        //         con.con.query("INSERT INTO question SET ?",questionInfo)
         con.con.query(`
         SELECT
         q.question_id,
@@ -328,7 +341,7 @@ module.exports = {
         con.con.query("DELETE FROM question WHERE question_id=?",con.body.question_id,callback)
     },
     eyeTracking:function(con,callback){
-        console.log(con)
+        
         con.con.query(`
         UPDATE state s
         INNER JOIN student st 
@@ -343,7 +356,7 @@ module.exports = {
         WHERE st.s_number=? AND s.test_id=? `,[con.s_number,con.test_id],callback)
     },
     volumeMeter:function(con,callback){
-        console.log(con)
+        
            con.con.query(`
         UPDATE state s
         INNER JOIN student st 
@@ -423,14 +436,15 @@ module.exports = {
         `,[con.body.question_grade,con.body.s_email,con.body.test_id,con.body.question_id],callback)
     },
     snumber:function(con,callback){
-        console.log(con)
+        
         con.con.query(`
         SELECT 
         s_number,
         s_name, 
-        (SELECT eye_caution FROM state WHERE test_id=? and s_email=?) as eye_caution
+        (SELECT eye_caution FROM state WHERE test_id=? and s_email=?) as eye_caution,
+        (SELECT mic_caution FROM state WHERE test_id=? and s_email=?) as mic_caution
         FROM student WHERE s_email=?
-        `,[con.test_id,con.s_email,con.s_email],callback)
+        `,[con.test_id,con.s_email,con.test_id,con.s_email,con.s_email,],callback)
     },
     comPile:function(con,callback){
         if(con.body.command == "update"){

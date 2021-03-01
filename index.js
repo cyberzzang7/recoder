@@ -56,6 +56,7 @@ io.on('connection', socket=>{
             join.con=con
             console.log(join.s_email);
             socket.join(join.test_id);
+              console.log(io.sockets.adapter.rooms)
             test.snumber(join,async(err,rows)=>{
                 if(err){
                     console.log(err)
@@ -77,6 +78,7 @@ io.on('connection', socket=>{
             console.log(m_roomout);
             
             console.log("선생님이 방을 나갑니다.")
+           
             socket.leave(m_roomout.test_id);
             console.log(io.sockets.adapter.rooms.get(m_roomout.test_id))
             io.to(m_roomout.test_id).emit('m_room_out',{manager:false});
