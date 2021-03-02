@@ -388,7 +388,7 @@ module.exports = {
     },
     stateInsert:function(con,callback){
         con.con.query(`SELECT test_id FROM state WHERE test_id=? and s_email=?`,[con.body.test_id,con.body.s_email],function(err,data){
-         
+            console.log(data)
         if(data.length=0){
             var stateInsert = {
                 test_id : con.body.test_id,
@@ -477,6 +477,11 @@ module.exports = {
         con.con.query(`
         UPDATE question_result SET question_grade=? WHERE s_email=? AND test_id=? AND question_id =?
         `,[con.body.question_grade,con.body.s_email,con.body.test_id,con.body.question_id],callback)
+    },
+    gradingCompleted:function(con,callback){
+        console.log(con.body)
+        con.con.query(`
+        UPDATE state SET score_validation=? WHERE s_email=? AND test_id=?`,[con.body.score_validation,con.body.s_email,con.body.test_id],callback)
     },
     snumber:function(con,callback){
         

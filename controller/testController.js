@@ -289,6 +289,15 @@ module.exports = {
             return res.json({"mes":"success"})
         })
     },
+    gradingcompleted:function(req,res){
+        test.gradingCompleted(req,async(err,rows)=>{
+            if(err) {
+                console.log(err)
+            }
+
+            return res.json({"mes":"success"})
+        })
+    },
     cautionpage: function (req,res){
         test.cautionPage(req,async(err,rows)=>{
             if(err){

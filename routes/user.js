@@ -26,6 +26,7 @@ router.post('/examcomplete',testController.examcomplete);
 router.post('/testpaper',testController.testpaper);
 router.post('/testgradingpage',testController.testgradingpage);
 router.post('/testgrading',testController.testgrading);
+router.post('/gradingcompleted',testController.gradingcompleted);
 
 router.post('/questioninfo',testController.questioninfo);
 router.post('/questionalter',testController.questionalter);
