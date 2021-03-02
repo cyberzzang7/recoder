@@ -354,6 +354,16 @@ module.exports = {
             return res.json(rows)
         })
     },
+    stateinsert:function(req,res){
+        test.stateInsert(req,async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            
+
+            return res.json({"mes":"success"})
+        })
+    },
     stateview:function(req,res){
         test.stateView(req,async(err,rows)=>{
             if(err){

@@ -37,6 +37,7 @@ router.post('/eyetracking',testController.eyetracking)
 
 router.post('/cautionpage',testController.cautionpage);
 
+router.post('/stateinsert',testController.stateinsert)
 router.post('/stateview',testController.stateview);
 
 module.exports= router;

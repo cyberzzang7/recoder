@@ -386,6 +386,27 @@ module.exports = {
         WHERE t.test_id=?`,[con.body.s_email,con.body.test_id,con.body.test_id],callback)
         
     },
+    stateInsert:function(con,callback){
+         var stateInsert = {
+                test_id : con.body.test_id,
+                s_email : con.body.s_email,
+                s_retake : 0,
+                mic_caution : 0,
+                eye_caution : 0,
+                test_validation : 0,
+                test_start_time : con.body.test_start_time,
+                test_end_time : con.body.test_end_time,
+                total_score : 0 ,
+                score_validation : 0
+        }
+        con.con.query("INSERT INTO state SET ?",stateInsert)
+        con.con.query("SELECT sum(q.question_score) as question_score FROM question q JOIN test_relation_question tr ON tr.question_id=q.question_id where test_id=?",con.body.test_id,function(err,rows){
+            console.log(rows[0])
+            con.con.query("UPDATE state SET total_score=?",rows[0].question_score,callback)
+        })
+        
+        
+    },
     stateView:function(con,callback){
         console.log(typeof con.body.s_email)
         if ( typeof con.body.s_email == "string") {
@@ -404,7 +425,7 @@ module.exports = {
             (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count,
             (select sum(question_grade) FROM question_result) as question_grade,
             (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
-            FROM state s
+            FROM state s 
             WHERE s.test_id=?
             `,[con.body.test_id,con.body.test_id,con.body.test_id],callback)
         }
