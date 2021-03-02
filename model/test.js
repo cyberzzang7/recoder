@@ -81,9 +81,9 @@ module.exports = {
             (select count(test_id) from state where test_id = t.test_id and test_validation = 1) as complete_student,
             (select count(test_id) from state where test_id = t.test_id) as total_student,
             (SELECT avg(question_score) FROM test te JOIN test_relation_question tr ON te.test_id=tr.test_id JOIN question q ON q.question_id=tr.question_id 
-            where te.test_id=t.test_id) as average_score,
+            WHERE te.test_id=t.test_id) as average_score,
             (SELECT sum(question_score) FROM test te JOIN test_relation_question tr ON te.test_id=tr.test_id JOIN question q ON q.question_id=tr.question_id 
-            where te.test_id=t.test_id) as total_score,
+            WHERE te.test_id=t.test_id) as total_score,
             (select count(*) from test where t.class_code=?) as test_count,
             (select count(*) from user_relation_class u WHERE t.class_code = u.class_code AND recognize = 1) as student_count,
             t.test_id,
@@ -97,10 +97,10 @@ module.exports = {
         if ( typeof con.body.t_email == "undefined"){
             con.con.query(
             `SELECT
-            (select class_name from class where class_code=?) as class_name,
+            (SELECT class_name FROM class WHERE class_code=?) as class_name,
             t.test_id,
             t.test_name,
-            (select count(*) from test_relation_question where test_id=t.test_id) AS questioncount ,
+            (SELECT count(*) FROM test_relation_question WHERE test_id=t.test_id) AS questioncount ,
             date_format(t.test_start, '%Y-%m-%d') AS date,
             date_format(t.test_start, '%p %H:%i') AS test_start,
             date_format(t.test_end, '%p %H:%i') AS test_end,
@@ -378,8 +378,8 @@ module.exports = {
         (SELECT s_number FROM student WHERE s_email=?) as s_number,
         date_format(t.test_start, '%Y-%m-%d %H:%i:%s') as test_start,
         date_format(t.test_end, '%Y-%m-%d %H:%i:%s') as test_end,
-        (select count(*) from test_relation_question where test_id=t.test_id) AS questioncount,
-        (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score,
+        (SELECT count(*) FROM test_relation_question WHERE test_id=t.test_id) AS questioncount,
+        (SELECT sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id WHERE test_id=? ) as total_score,
         TIMESTAMPDIFF(minute, date_format(t.test_start, '%Y-%m-%d %H:%i'),  date_format(t.test_end,'%Y-%m-%d %H:%i')) AS time_diff,
         t.test_caution  
         FROM test t 
@@ -400,9 +400,17 @@ module.exports = {
                 score_validation : 0
         }
         con.con.query("INSERT INTO state SET ?",stateInsert)
-        con.con.query("SELECT sum(q.question_score) as question_score FROM question q JOIN test_relation_question tr ON tr.question_id=q.question_id where test_id=?",con.body.test_id,function(err,rows){
+        con.con.query(`
+        SELECT sum(q.question_score) as question_score 
+        FROM question q JOIN test_relation_question tr ON tr.question_id=q.question_id 
+        WHERE test_id=?`,con.body.test_id,function(err,rows){
             console.log(rows[0])
-            con.con.query("UPDATE state SET total_score=?",rows[0].question_score,callback)
+            con.con.query("UPDATE state SET total_score=?",rows[0].question_score)
+        })
+        con.con.query(`
+        SELECT test_start,test_end FROM test WHERE test_id=?`,con.body.test_id,function(err,rows){
+            console.log(rows[0])
+            con.con.query("UPDATE state SET test_start_time=?,test_end_time=?",[rows[0].test_start,rows[0].test_end],callback)
         })
         
         
@@ -413,21 +421,21 @@ module.exports = {
             con.con.query(`
             SELECT
             *,
-            (select sum(qr.question_grade) from question_result qr where qr.test_id=? and qr.s_email=?) as student_score,
-            (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
+            (SELECT sum(qr.question_grade) from question_result qr where qr.test_id=? and qr.s_email=?) as student_score,
+            (SELECT sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
             FROM state s 
             WHERE s.test_id=? AND s.s_email=?`,[con.body.test_id,con.body.s_email,con.body.test_id,con.body.test_id,con.body.s_email],callback)
         } else {
              con.con.query(`
             SELECT
             *,
-            (SELECT count(question_id) FROM test_relation_question tr where tr.test_id =?) as question_count,
+            (SELECT count(question_id) FROM test_relation_question tr WHERE tr.test_id =?) as question_count,
             (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count,
-            (select sum(question_grade) FROM question_result) as question_grade,
-            (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
+            (SELECT sum(question_grade) FROM question_result qr JOIN test_relation_question tr ON qr.question_id=tr.question_id WHERE qr.test_id=?) as question_grade,
+            (SELECT sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id WHERE test_id=? ) as total_score
             FROM state s 
             WHERE s.test_id=?
-            `,[con.body.test_id,con.body.test_id,con.body.test_id],callback)
+            `,[con.body.test_id,con.body.test_id,con.body.test_id,con.body.test_id],callback)
         }
     },
     studentName:function(con,callback){
