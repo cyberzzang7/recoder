@@ -387,7 +387,10 @@ module.exports = {
         
     },
     stateInsert:function(con,callback){
-         var stateInsert = {
+        con.con.query(`SELECT test_id FROM state WHERE test_id=? and s_email=?`,[con.body.test_id,con.body.s_email],function(err,data){
+         
+        if(data.length=0){
+            var stateInsert = {
                 test_id : con.body.test_id,
                 s_email : con.body.s_email,
                 s_retake : 0,
@@ -398,21 +401,24 @@ module.exports = {
                 test_end_time : con.body.test_end_time,
                 total_score : 0 ,
                 score_validation : 0
-        }
-        con.con.query("INSERT INTO state SET ?",stateInsert)
-        con.con.query(`
-        SELECT sum(q.question_score) as question_score 
-        FROM question q JOIN test_relation_question tr ON tr.question_id=q.question_id 
-        WHERE test_id=?`,con.body.test_id,function(err,rows){
+            }
+            con.con.query("INSERT INTO state SET ?",stateInsert)
+            con.con.query(`
+            SELECT sum(q.question_score) as question_score 
+            FROM question q JOIN test_relation_question tr ON tr.question_id=q.question_id 
+            WHERE test_id=?`,con.body.test_id,function(err,rows){
             console.log(rows[0])
             con.con.query("UPDATE state SET total_score=?",rows[0].question_score)
-        })
-        con.con.query(`
-        SELECT test_start,test_end FROM test WHERE test_id=?`,con.body.test_id,function(err,rows){
+            })
+            con.con.query(`
+            SELECT test_start,test_end FROM test WHERE test_id=?`,con.body.test_id,function(err,rows){
             console.log(rows[0])
             con.con.query("UPDATE state SET test_start_time=?,test_end_time=?",[rows[0].test_start,rows[0].test_end],callback)
+            })
+            } else {
+                con.con.query(`SELECT test_id FROM state WHERE test_id=? and s_email=?`,[con.body.test_id,con.body.s_email],callback)
+            }
         })
-        
         
     },
     stateView:function(con,callback){
@@ -426,7 +432,7 @@ module.exports = {
             FROM state s 
             WHERE s.test_id=? AND s.s_email=?`,[con.body.test_id,con.body.s_email,con.body.test_id,con.body.test_id,con.body.s_email],callback)
         } else {
-             con.con.query(`
+            con.con.query(`
             SELECT
             *,
             (SELECT count(question_id) FROM test_relation_question tr WHERE tr.test_id =?) as question_count,
