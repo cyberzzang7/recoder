@@ -403,7 +403,7 @@ module.exports = {
                 console.log(err)
             }
 
-
+            console.log(rows)
 
             return res.json({"mes":"success"})
         })

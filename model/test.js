@@ -388,8 +388,8 @@ module.exports = {
     },
     stateInsert:function(con,callback){
         con.con.query(`SELECT test_id FROM state WHERE test_id=? and s_email=?`,[con.body.test_id,con.body.s_email],function(err,data){
-            console.log(data)
-        if(data.length=0){
+            console.log(data.length)
+        if(data.length==0){
             var stateInsert = {
                 test_id : con.body.test_id,
                 s_email : con.body.s_email,
@@ -496,7 +496,7 @@ module.exports = {
     },
     comPile:function(con,callback){
         if(con.body.command == "update"){
-            console.log(con.body)``
+            console.log(con.body)
             con.con.query(`
             UPDATE question_result 
             SET compile_code =?, compile_result =? 
