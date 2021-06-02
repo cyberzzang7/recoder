@@ -106,5 +106,13 @@ io.on('connection', socket=>{
                 io.to(data.test_id).emit('volumeMeter',rows[0])
             })
         })
+        socket.on('send message', (item) => {
+		const msg = item.name + ' : ' + item.message;
+		console.log(msg);
+		io.emit('receive message', {name:item.name, message:item.message});
+	});
+    socket.on('disconnect', function () {
+		console.log('user disconnected: ', socket.id);
+	});
 })
 

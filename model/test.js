@@ -308,6 +308,7 @@ module.exports = {
         //             score_validation : 0
         //         }
         //         con.con.query("INSERT INTO question SET ?",questionInfo)
+        // 수정
         con.con.query(`
         SELECT
         q.question_id,
