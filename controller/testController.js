@@ -319,6 +319,16 @@ module.exports = {
             })
         })
     },
+    retake:function(req,res){
+        test.retake(req,async(err,rows)=>{
+            if(err){
+                console.log(err)
+            }
+            console.log(rows)
+
+            return res.json(rows)
+        })
+    },
     questioninfo:function(req,res){
         test.questionInfo(req,async(err,rows)=>{
              if(err){

@@ -89,8 +89,8 @@ module.exports = {
             t.test_id,
             t.test_name, 
             (select count(*) from test_relation_question where test_id=t.test_id) AS questioncount ,
-            date_format(t.test_start, '%Y-%m-%d %H:%i:%s') AS test_start,
-            date_format(t.test_end, '%Y-%m-%d %H:%i:%s') AS test_end,
+            date_format(t.test_start, '%Y-%m-%d %H:%i') AS test_start,
+            date_format(t.test_end, '%Y-%m-%d %H:%i') AS test_end,
             t.t_test_status 
             FROM test t WHERE t.class_code=?`,[con.body.class_code,con.body.class_code,con.body.class_code],callback)
         }
@@ -293,6 +293,21 @@ module.exports = {
             FROM student s LEFT OUTER JOIN state state 
             ON s.s_email=state.s_email 
             WHERE state.test_id=?`,con.classInfo[1].test_id,callback)
+    },
+    retake:function(con,callback){
+        
+        con.con.query(
+            `UPDATE 
+            state
+            SET s_retake = s_retake+1
+            WHERE test_id=? and s_email=? and s_retake<3`, [con.body.test_id,con.body.s_email]
+        )
+        con.con.query(
+            `SELECT
+             s_retake
+             FROM state
+             WHERE test_id=? and s_email=?`, [con.body.test_id,con.body.s_email],callback
+        )
     },
     testPaper:function(con,callback){
         // var stateInfo = {
