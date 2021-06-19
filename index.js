@@ -111,16 +111,18 @@ io.on('connection', socket=>{
         socket.on('send message', (item) => {
 		    const msg = item.name + ' : ' + item.s_name + ' : ' + item.message ;
             item.con=con
-            if(typeof item.s_email != undefined){
-            test.stdSearch(item.s_email,async(err,rows)=>{
+            if(item.teacher ==true){
+            test.stdSearch(item,async(err,rows)=>{
             if(err){
                     console.log(err)
                 }
-                console.log(rows)
-            })
-        }
-		console.log(msg);
+        		console.log(msg);
 		io.emit('receive message', {name:item.name,s_name:rows,message:item.message});
+            })
+        }else if(item.teacher == false){
+        
+        io.emit('receive message', {name:item.name,s_name:item.s_name,message:item.message});
+        }
 	});
     socket.on('disconnect', function () {
 		console.log('user disconnected: ', socket.id);
