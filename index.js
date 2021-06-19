@@ -48,9 +48,10 @@ io.on('connection', socket=>{
                 
                  curRoom.test_id = create.test_id;
                  curRoom.t_email = create.t_email;
+             
                  console.log(curRoom)
         })
-    
+        
         socket.on("join",function(join){
             console.log(join)
             join.con=con
@@ -62,6 +63,7 @@ io.on('connection', socket=>{
                     console.log(err)
                 }
                 console.log(rows)
+                
                 io.to(join.test_id).emit('student_join',rows[0]);
             })
         // console.log(io.sockets.adapter.rooms.get(join.test_id.get(join.t_email)))
@@ -107,8 +109,9 @@ io.on('connection', socket=>{
             })
         })
         socket.on('send message', (item) => {
-		const msg = item.name + ' : ' + item.s_name + ' : ' + item.message ;
+		const msg = item.name + ' : ' + std_name.s_name + ' : ' + item.message ;
 		console.log(msg);
+          console.log(io.sockets.adapter.rooms)
 		io.emit('receive message', {name:item.name,s_name:item.s_name,message:item.message});
 	});
     socket.on('disconnect', function () {
