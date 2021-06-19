@@ -534,5 +534,9 @@ module.exports = {
     testValidation:function(con,callback){
         con.con.query(`
         UPDATE state SET test_validation='1' WHERE test_id=? and s_email=?`,[con.body.test_id,con.body.s_email],callback)
+    },
+    stdSearch:function(con,callback){
+        con.con.query(`
+        SELECT s_name from student where s_email=?`,con.s_email,callback)
     }
 }

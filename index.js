@@ -109,10 +109,18 @@ io.on('connection', socket=>{
             })
         })
         socket.on('send message', (item) => {
-		const msg = item.name + ' : ' + std_name.s_name + ' : ' + item.message ;
+		    const msg = item.name + ' : ' + item.s_name + ' : ' + item.message ;
+            item.con=con
+            if(typeof item.s_email != undefined){
+            test.stdSearch(item.s_email,async(err,rows)=>{
+            if(err){
+                    console.log(err)
+                }
+                console.log(rows)
+            })
+        }
 		console.log(msg);
-          console.log(io.sockets.adapter.rooms)
-		io.emit('receive message', {name:item.name,s_name:item.s_name,message:item.message});
+		io.emit('receive message', {name:item.name,s_name:rows,message:item.message});
 	});
     socket.on('disconnect', function () {
 		console.log('user disconnected: ', socket.id);
