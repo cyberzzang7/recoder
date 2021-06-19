@@ -505,6 +505,7 @@ module.exports = {
         SELECT 
         s_number,
         s_name, 
+        s_email,
         (SELECT eye_caution FROM state WHERE test_id=? and s_email=?) as eye_caution,
         (SELECT mic_caution FROM state WHERE test_id=? and s_email=?) as mic_caution
         FROM student WHERE s_email=?
@@ -529,5 +530,9 @@ module.exports = {
             }
             con.con.query("INSERT INTO question_result SET ?",comPileInsert,callback)
         }
+    },
+    testValidation:function(con,callback){
+        con.con.query(`
+        UPDATE state SET test_validation='1' WHERE test_id=? and s_email=?`,[con.body.test_id,con.body.s_email],callback)
     }
 }

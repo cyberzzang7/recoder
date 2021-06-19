@@ -418,6 +418,17 @@ module.exports = {
             return res.json({"mes":"success"})
         })
     },
+    testvalidation:function(req,res){
+        test.testValidation(req,async(err,rows)=>{
+              if(err){
+                console.log(err)
+            }
+
+            console.log(rows)
+
+            return res.json({"mes":"success"})
+        })
+    },
     // roomcreate:function(req,res){
     //     //ㅡㅡㅡㅡㅡㅡ웹 소켓 ㅡㅡㅡㅡㅡㅡ//
     // const server = require('http').createServer(app).listen(3001, ()=> {

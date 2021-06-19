@@ -1,4 +1,5 @@
 const express = require('express');
+const { testvalidation } = require('../controller/testController');
 const router = express.Router();
 const testController = require('../controller/testController');
 const test = require('../model/test');
@@ -28,6 +29,7 @@ router.post('/testpaper',testController.testpaper);
 router.post('/testgradingpage',testController.testgradingpage);
 router.post('/testgrading',testController.testgrading);
 router.post('/gradingcompleted',testController.gradingcompleted);
+router.post('/testvalidation', testController.testvalidation)
 
 router.post('/questioninfo',testController.questioninfo);
 router.post('/questionalter',testController.questionalter);
