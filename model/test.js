@@ -453,7 +453,7 @@ module.exports = {
             *,
             (SELECT count(question_id) FROM test_relation_question tr WHERE tr.test_id =?) as question_count,
             (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count,
-            (SELECT sum(question_grade) FROM question_result qr JOIN test_relation_question tr ON qr.question_id=tr.question_id WHERE qr.test_id=?) as question_grade,
+            (SELECT sum(question_grade) FROM question_result qr JOIN test_relation_question tr ON qr.question_id=tr.question_id WHERE qr.s_email=s.s_email) as question_grade,
             (SELECT sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id WHERE test_id=? ) as total_score
             FROM state s 
             WHERE s.test_id=?
