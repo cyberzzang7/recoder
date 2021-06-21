@@ -507,6 +507,11 @@ module.exports = {
         con.con.query(`
         SELECT test_name FROM test WHERE test_id=? `,con.body.test_id,callback)
     },
+    stdName:function(con,callback){
+        console.log(con.body.s_email)
+        con.con.query(`
+        SELECT s_name FROM student WHERE s_email=?`,con.body.s_email,callback)  
+    },
     testQuestion:function(con,callback){
         con.con.query(`
         SELECT question_id

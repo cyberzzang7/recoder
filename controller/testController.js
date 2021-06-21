@@ -271,7 +271,12 @@ module.exports = {
             console.log(rows[0])
             test.testName(req,async(err,rowss)=>{
                 rows[0].test_name = rowss[0].test_name
-                return res.json(rows)
+                test.stdName(req,async(err,rowsss)=>{
+                    console.log(rowsss)
+                    rows[0].s_name = rowsss[0].s_name 
+                    return res.json(rows)
+                })
+                
             })
             
            
