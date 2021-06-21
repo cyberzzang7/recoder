@@ -144,20 +144,30 @@ module.exports = {
             if(err){
                 console.log(err)
             }
-        
-            // if(rows.length>0) {
-            //     return res.json(rows)
-            // } 
-            // if(rows.length==0) {
-            //     return res.json({"mes":"is not test"})
-            // }
-
-            switch(rows.length){
+            
+            test.testIdSearch(req, function(err,testid){
+                console.log(testid)
+                console.log(testid.length)
+                for(let i=0 ; i <testid.length; i++){
+                    req.body.test_id = testid[i].test_id
+                    console.log(req.body)
+                    test.avgscore(req, function(err,rowss){
+                    console.log(rowss[i].average_score)
+                    console.log(rowss[i].average_score)
+                    console.log(rows[i])
+                    console.log(rows[i])
+                    rows[i].average_score = rowss[0].average_score
+                  
+                    })
+                    
+                }
+                switch(rows.length){
                 case 0:
                     return res.json({"mes":"is not test"})
                 default:
                     return res.json(rows)
             }
+            })
         })
     },
     classjoin:function(req,res){
@@ -276,10 +286,14 @@ module.exports = {
                
             }
             console.log(rows)
+            test.testName(req,async(err,rowss)=>{
+                rows[0].test_name = rowss[0]
+            })
             
             return res.json(rows)
       })  
     },
+    
     testgrading:function(req,res) {
         test.testGrading(req,async(err,rows)=>{
             if(err) {
@@ -307,6 +321,7 @@ module.exports = {
             }
             console.log(rows)
             test.retakecount(req,async(err,rowss)=>{
+                
                 if(rowss[0].s_retake == rowss[0].test_retake){
                     let retake = false
                     rows[0].retake = retake
