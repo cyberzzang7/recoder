@@ -76,14 +76,14 @@ io.on('connection', socket=>{
             console.log(io.sockets.adapter.rooms.get(roomout.test_id))
             io.to(roomout.test_id).emit('room_out',roomout.s_email);    
         })
-        socket.on("m_room_out",function(m_roomout){
-            console.log(m_roomout);
+        socket.on("m_room_out",function(mroomout){
+            console.log(mroomout);
             
             console.log("선생님이 방을 나갑니다.")
-           
-            socket.leave(m_roomout.test_id);
-            console.log(io.sockets.adapter.rooms.get(m_roomout.test_id))
-            io.to(m_roomout.test_id).emit('m_room_out',{manager:false});
+            socket.leave(mroomout.test_id);
+            console.log(io.sockets.adapter.rooms.get(mroomout.test_id))
+            io.to(mroomout.test_id).emit('m_room_out',mroomout.t_email);
+            
         })
 
         socket.on("eyetracking", function(data){
