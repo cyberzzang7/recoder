@@ -145,29 +145,12 @@ module.exports = {
                 console.log(err)
             }
             
-            // test.testIdSearch(req, function(err,testid){
-            //     console.log(testid)
-            //     console.log(testid.length)
-            //     for(let i=0 ; i <testid.length; i++){
-            //         req.body.test_id = testid[i].test_id
-            //         console.log(req.body)
-            //         test.avgscore(req, function(err,rowss){
-            //         console.log(rowss[i].average_score)
-            //         console.log(rowss[i].average_score)
-            //         console.log(rows[i])
-            //         console.log(rows[i])
-            //         rows[i].average_score = rowss[0].average_score
-                  
-            //         })
-                    
-            //     }
                 switch(rows.length){
                 case 0:
                     return res.json({"mes":"is not test"})
                 default:
                     return res.json(rows)
             }
-            // })
         })
     },
     classjoin:function(req,res){
