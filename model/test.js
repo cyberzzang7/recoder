@@ -110,6 +110,19 @@ module.exports = {
             WHERE ur.s_email=? and ur.class_code=? and ur.recognize=1`,[con.body.class_code,con.body.s_email,con.body.class_code],callback)
         }
     },
+    testIdSearch:function(con,callback){
+        con.con.query(`
+        SELECT test_id FROM test t 
+        WHERE t.class_code=? 
+        `,con.body.class_code,callback)
+    },
+    avgscore:function(con,callback){
+        console.log(con.body)
+        con.con.query(`
+        SELECT avg(qr.question_grade) as average_score FROM question_result qr 
+        WHERE  qr.test_id=? 
+        `,con.body.test_id,callback)
+    },
     totalScore:function(con,callback){
 
     },
@@ -406,9 +419,8 @@ module.exports = {
         SELECT s.s_retake,t.test_retake
         FROM test t
         INNER JOIN state s
-        ON t.test_id = s.test_id
-        WHERE s.s_email = ?
-        `,con.body.s_email,callback)
+        WHERE s.s_email = ? and s.test_id =?
+        `,[con.body.s_email,con.body.test_id],callback)
     },
     stateInsert:function(con,callback){
         con.con.query(`SELECT test_id FROM state WHERE test_id=? and s_email=?`,[con.body.test_id,con.body.s_email],function(err,data){
@@ -460,14 +472,14 @@ module.exports = {
             SELECT
             *,
             (SELECT count(question_id) FROM test_relation_question tr WHERE tr.test_id =?) as question_count,
-            (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count,
+            (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email and qr.test_id=? ) as compile_count,
             (SELECT sum(question_grade) FROM question_result qr JOIN test_relation_question tr ON qr.question_id=tr.question_id WHERE qr.s_email=s.s_email and qr.test_id=?) as question_grade,
             (SELECT sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id WHERE test_id=? ) as total_score
             FROM state s 
             WHERE s.test_id=?
-            `,[con.body.test_id,con.body.test_id,con.body.test_id,con.body.test_id],callback)
+            `,[con.body.test_id,con.body.test_id,con.body.test_id,con.body.test_id,con.body.test_id],callback)
         }
-    },
+    }, 
     studentName:function(con,callback){
         con.con.query(`
         SELECT 
@@ -489,6 +501,10 @@ module.exports = {
         (select sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id where test_id=? ) as total_score
         FROM question_result qr JOIN question q ON q.question_id=qr.question_id 
         WHERE qr.test_id = ? and qr.s_email=?`,[con.body.test_id,con.body.test_id,con.body.s_email],callback)
+    },
+    testName:function(con,callback){
+        con.con.query(`
+        SELECT test_name FROM test t WHERE t.test.id=? `,con.body.test_id,callback)
     },
     testQuestion:function(con,callback){
         con.con.query(`
