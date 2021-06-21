@@ -125,7 +125,7 @@ module.exports = {
             }
 
             console.log(rows)
-
+//안녕
             return res.json(rows)
         })
     },
