@@ -397,10 +397,18 @@ module.exports = {
         (SELECT count(*) FROM test_relation_question WHERE test_id=t.test_id) AS questioncount,
         (SELECT sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id WHERE test_id=? ) as total_score,
         TIMESTAMPDIFF(minute, date_format(t.test_start, '%Y-%m-%d %H:%i'),  date_format(t.test_end,'%Y-%m-%d %H:%i')) AS time_diff,
-        t.test_caution  
+        t.test_caution
         FROM test t 
-        WHERE t.test_id=?`,[con.body.s_email,con.body.test_id,con.body.test_id],callback)
-        
+        WHERE t.test_id=?`,[con.body.s_email,con.body.test_id,con.body.test_id],callback)  
+    },
+    retakecount:function(con,callback){
+        con.con.query(`
+        SELECT s.s_retake,t.test_retake
+        FROM test t
+        INNER JOIN state s
+        ON t.test_id = s.test_id
+        WHERE s.s_email = ?
+        `,con.body.s_email,callback)
     },
     stateInsert:function(con,callback){
         con.con.query(`SELECT test_id FROM state WHERE test_id=? and s_email=?`,[con.body.test_id,con.body.s_email],function(err,data){
@@ -453,7 +461,7 @@ module.exports = {
             *,
             (SELECT count(question_id) FROM test_relation_question tr WHERE tr.test_id =?) as question_count,
             (SELECT count(qr.compile_code) FROM question_result qr WHERE s.s_email=qr.s_email ) as compile_count,
-            (SELECT sum(question_grade) FROM question_result qr JOIN test_relation_question tr ON qr.question_id=tr.question_id WHERE qr.s_email=s.s_email) as question_grade,
+            (SELECT sum(question_grade) FROM question_result qr JOIN test_relation_question tr ON qr.question_id=tr.question_id WHERE qr.s_email=s.s_email and qr.test_id=?) as question_grade,
             (SELECT sum(q.question_score) FROM test_relation_question rq LEFT OUTER JOIN question q ON q.question_id=rq.question_id WHERE test_id=? ) as total_score
             FROM state s 
             WHERE s.test_id=?

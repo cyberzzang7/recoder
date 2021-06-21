@@ -1,6 +1,7 @@
 const test = require('../model/test');
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const { retakecount } = require('../model/test');
 
 module.exports = {
     login: async (req, res)=>{
@@ -305,8 +306,20 @@ module.exports = {
                
             }
             console.log(rows)
+            test.retakecount(req,async(err,rowss)=>{
+                if(rowss[0].s_retake == rowss[0].test_retake){
+                    let retake = false
+                    rows[0].retake = retake
+                }else{
+                    let retake = true
+                    rows[0].retake = retake
+                }
+                
+                
+                return res.json(rows)
+            })
 
-            return res.json(rows)
+           
         })
     },
     examcomplete:function(req,res){
@@ -388,6 +401,7 @@ module.exports = {
             if(err){
                 console.log(err)
             }
+            
             if(typeof req.body.s_email=="undefined"){
                 test.studentName(req,async(err,rowss)=>{
                     console.log(rowss)
