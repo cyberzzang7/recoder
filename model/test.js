@@ -110,19 +110,19 @@ module.exports = {
             WHERE ur.s_email=? and ur.class_code=? and ur.recognize=1`,[con.body.class_code,con.body.s_email,con.body.class_code],callback)
         }
     },
-    testIdSearch:function(con,callback){
-        con.con.query(`
-        SELECT test_id FROM test t 
-        WHERE t.class_code=? 
-        `,con.body.class_code,callback)
-    },
-    avgscore:function(con,callback){
-        console.log(con.body)
-        con.con.query(`
-        SELECT avg(qr.question_grade) as average_score FROM question_result qr 
-        WHERE  qr.test_id=? 
-        `,con.body.test_id,callback)
-    },
+    // testIdSearch:function(con,callback){
+    //     con.con.query(`
+    //     SELECT test_id FROM test t 
+    //     WHERE t.class_code=? 
+    //     `,con.body.class_code,callback)
+    // },
+    // avgscore:function(con,callback){
+    //     console.log(con.body)
+    //     con.con.query(`
+    //     SELECT avg(qr.question_grade) as average_score FROM question_result qr 
+    //     WHERE  qr.test_id=? 
+    //     `,con.body.test_id,callback)
+    // },
     totalScore:function(con,callback){
 
     },
