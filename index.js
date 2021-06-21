@@ -74,7 +74,7 @@ io.on('connection', socket=>{
             console.log("유저가 방을 나갑니다.")
             socket.leave(roomout.test_id);
             console.log(io.sockets.adapter.rooms.get(roomout.test_id))
-            io.to(roomout.test_id).emit('room_out',"시험이 종료되고 방을 나갑니다.");    
+            io.to(roomout.test_id).emit('room_out',roomout.s_email);    
         })
         socket.on("m_room_out",function(m_roomout){
             console.log(m_roomout);
