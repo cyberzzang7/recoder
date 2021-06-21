@@ -285,12 +285,13 @@ module.exports = {
                 console.log(err)
                
             }
-            console.log(rows)
+            console.log(rows[0])
             test.testName(req,async(err,rowss)=>{
-                rows[0].test_name = rowss[0]
+                rows[0].test_name = rowss[0].test_name
+                return res.json(rows)
             })
             
-            return res.json(rows)
+           
       })  
     },
     

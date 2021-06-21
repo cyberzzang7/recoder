@@ -503,8 +503,9 @@ module.exports = {
         WHERE qr.test_id = ? and qr.s_email=?`,[con.body.test_id,con.body.test_id,con.body.s_email],callback)
     },
     testName:function(con,callback){
+        console.log(con.body.test_id)
         con.con.query(`
-        SELECT test_name FROM test t WHERE t.test.id=? `,con.body.test_id,callback)
+        SELECT test_name FROM test WHERE test_id=? `,con.body.test_id,callback)
     },
     testQuestion:function(con,callback){
         con.con.query(`
